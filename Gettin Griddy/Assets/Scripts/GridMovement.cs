@@ -25,7 +25,6 @@ public class GridMovement : MonoBehaviour
 
         if(isTile(dir))
         {
-            Debug.Log("HI");
             Vector3 newPos = transform.position;
             switch(moveDir)
             {

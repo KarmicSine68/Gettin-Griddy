@@ -12,6 +12,7 @@ public class GameManager : MonoBehaviour
 {
     [SerializeField] private GameObject player;
     [SerializeField] private GameObject gridSpace;
+    [SerializeField] private GameObject playerTracker;
 
     GameObject[,] grid;
 
@@ -39,6 +40,9 @@ public class GameManager : MonoBehaviour
         SpawnPlayer();
     }
 
+    /// <summary>
+    /// Spawns the player on the grid
+    /// </summary>
     private void SpawnPlayer()
     {
         int x = Random.Range(0, columns);
@@ -49,5 +53,25 @@ public class GameManager : MonoBehaviour
         spawnPos += new Vector3(.5f, 1.5f, .5f);
 
         Instantiate(player, spawnPos, Quaternion.identity);
+    }
+
+    /// <summary>
+    /// Updates where in the grid the player is
+    /// </summary>
+    /// <param name="tile"></param>
+    public void TrackPlayer(GameObject tile)
+    {
+        playerTracker = tile;
+        
+        for(int i = 0; i < rows; ++i)
+        {
+            for(int j = 0; j < columns; ++j)
+            {
+                if(grid[j,i] == playerTracker)
+                {
+                    grid[j, i] = playerTracker;
+                }
+            }
+        }
     }
 }

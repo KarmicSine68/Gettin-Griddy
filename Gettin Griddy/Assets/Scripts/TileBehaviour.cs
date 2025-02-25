@@ -19,6 +19,10 @@ public class TileBehaviour : MonoBehaviour
         if(!collision.gameObject.GetComponent<TileBehaviour>())
         {
             collision.transform.SetParent(gameObject.transform);
+
+            GameManager gm = FindObjectOfType<GameManager>();
+
+            gm.TrackPlayer(gameObject);
         }
     }
 }
