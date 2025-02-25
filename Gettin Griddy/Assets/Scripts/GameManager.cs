@@ -13,6 +13,7 @@ public class GameManager : MonoBehaviour
     [SerializeField] private GameObject player;
     [SerializeField] private GameObject gridSpace;
     [SerializeField] private GameObject playerTracker;
+    [SerializeField] private GameObject boulder;
 
     GameObject[,] grid;
 
@@ -38,6 +39,7 @@ public class GameManager : MonoBehaviour
         }
 
         SpawnPlayer();
+        SpawnBoulder();
     }
 
     /// <summary>
@@ -72,6 +74,28 @@ public class GameManager : MonoBehaviour
                     grid[j, i] = playerTracker;
                 }
             }
+        }
+    }
+
+    /// <summary>
+    /// Spawns a boulder that obstructs the player's movement
+    /// </summary>
+    private void SpawnBoulder()
+    {
+        int x = Random.Range(0, columns);
+        int y = Random.Range(0, rows);
+
+        Vector3 spawnPos = grid[x, y].transform.position;
+
+        spawnPos += new Vector3(.5f, 1.5f, .5f);
+
+        if (grid[x, y] == playerTracker)
+        {
+            SpawnBoulder();
+        }
+        else
+        {
+            Instantiate(boulder, spawnPos, Quaternion.identity);
         }
     }
 }

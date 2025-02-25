@@ -23,7 +23,7 @@ public class GridMovement : MonoBehaviour
             GetTile();
         }
 
-        if(isTile(dir))
+        if(isTile(dir) && CanMove(dir))
         {
             Vector3 newPos = transform.position;
             switch(moveDir)
@@ -72,5 +72,17 @@ public class GridMovement : MonoBehaviour
     protected void GetTile()
     {
         currentTile = gameObject.GetComponentInParent<TileBehaviour>().gameObject;
+    }
+
+    protected bool CanMove(Vector3 dir)
+    {
+        Vector3 rayOrigin = transform.position;
+        rayOrigin.y -= .5f;
+        RaycastHit hit;
+        Physics.Raycast(rayOrigin, dir, out hit, currentTile.transform.localScale.x);
+
+        GameObject tile = hit.collider.gameObject;
+
+        return (!tile.GetComponentInChildren<SphereCollider>());
     }
 }
