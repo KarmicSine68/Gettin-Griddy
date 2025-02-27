@@ -21,7 +21,6 @@ public class MenuButtons : MonoBehaviour
 
     public void OnClickQuit()
     {
-        Debug.Log("Quit");
         Application.Quit();
     }
 
