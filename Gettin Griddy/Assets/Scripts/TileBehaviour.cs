@@ -33,13 +33,13 @@ public class TileBehaviour : MonoBehaviour
             gm.TrackEnemy(GetComponent<TileBehaviour>());
         }*/
     }
-    public void Jiggle() {
-        StartCoroutine(MoveUpAndDown());
+    public void FlashRed() {
+        StartCoroutine(Flash());
     }
-    private IEnumerator MoveUpAndDown()
+    private IEnumerator Flash()
     {
-        transform.position += new Vector3(0, 0.5f, 0);
-        yield return new WaitForSeconds(0.5f);
-        transform.position -= new Vector3(0, 0.5f, 0);
+        GetComponent<Renderer>().material.color = Color.red;
+        yield return new WaitForSeconds(0.25f);
+        GetComponent<Renderer>().material.color = Color.white;
     }
 }

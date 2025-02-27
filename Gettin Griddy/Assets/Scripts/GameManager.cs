@@ -73,19 +73,46 @@ public class GameManager : MonoBehaviour
     public void Attack(Vector2 attackDir) {
         List<TileBehaviour> tilesToAttack = new List<TileBehaviour>();
         Vector2 playerPos = playerTile.gridLocation;
-        tilesToAttack.Add(grid[(int)(playerPos.x + attackDir.x), (int)(playerPos.y + attackDir.y)].GetComponent<TileBehaviour>());
+        if (gridHasPosition(new Vector2((int)(playerPos.x + attackDir.x), (int)(playerPos.y + attackDir.y)))) {
+            tilesToAttack.Add(grid[(int)(playerPos.x + attackDir.x), (int)(playerPos.y + attackDir.y)].GetComponent<TileBehaviour>());
+        }
         if (attackDir.x != 0)
         {
-            tilesToAttack.Add(grid[(int)(playerPos.x + attackDir.x), (int)(playerPos.y + attackDir.y + 1)].GetComponent<TileBehaviour>());
-            tilesToAttack.Add(grid[(int)(playerPos.x + attackDir.x), (int)(playerPos.y + attackDir.y - 1)].GetComponent<TileBehaviour>());
+            if (gridHasPosition(new Vector2((int)(playerPos.x + attackDir.x), (int)(playerPos.y + attackDir.y + 1))))
+            {
+                tilesToAttack.Add(grid[(int)(playerPos.x + attackDir.x), (int)(playerPos.y + attackDir.y + 1)].GetComponent<TileBehaviour>());
+            }
+            if (gridHasPosition(new Vector2((int)(playerPos.x + attackDir.x), (int)(playerPos.y + attackDir.y - 1))))
+            {
+                tilesToAttack.Add(grid[(int)(playerPos.x + attackDir.x), (int)(playerPos.y + attackDir.y - 1)].GetComponent<TileBehaviour>());
+            }
         }
         else {
-            tilesToAttack.Add(grid[(int)(playerPos.x + attackDir.x + 1), (int)(playerPos.y + attackDir.y)].GetComponent<TileBehaviour>());
-            tilesToAttack.Add(grid[(int)(playerPos.x + attackDir.x - 1), (int)(playerPos.y + attackDir.y)].GetComponent<TileBehaviour>());
+            if (gridHasPosition(new Vector2((int)(playerPos.x + attackDir.x + 1), (int)(playerPos.y + attackDir.y))))
+            {
+                tilesToAttack.Add(grid[(int)(playerPos.x + attackDir.x + 1), (int)(playerPos.y + attackDir.y)].GetComponent<TileBehaviour>());
+            }
+            if (gridHasPosition(new Vector2((int)(playerPos.x + attackDir.x - 1), (int)(playerPos.y + attackDir.y))))
+            {
+                tilesToAttack.Add(grid[(int)(playerPos.x + attackDir.x - 1), (int)(playerPos.y + attackDir.y)].GetComponent<TileBehaviour>());
+            }
         }
-        foreach (TileBehaviour t in tilesToAttack) {
-            t.Jiggle();
+        if (tilesToAttack.Count <= 0)
+        {
+            print("There're no tiles that way goofy");
+        } else {
+            foreach (TileBehaviour t in tilesToAttack)
+            {
+                t.FlashRed();
+                // check to see if the tile has an enemy on it then call that enemys "take danage" function
+            }
         }
+    }
+    private bool gridHasPosition(Vector2 pos) {
+        if (pos.x < 0 || pos.x >= rows || pos.y < 0 || pos.y >= columns) {
+            return false;
+        }
+        return true;
     }
     /// <summary>
     /// Spawns a boulder that obstructs the player's movement
