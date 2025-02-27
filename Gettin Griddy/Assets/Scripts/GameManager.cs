@@ -84,7 +84,7 @@ public class GameManager : MonoBehaviour
             tilesToAttack.Add(grid[(int)(playerPos.x + attackDir.x - 1), (int)(playerPos.y + attackDir.y)].GetComponent<TileBehaviour>());
         }
         foreach (TileBehaviour t in tilesToAttack) {
-            t.Jiggle();
+            t.FlashRed();
         }
     }
     /// <summary>
