@@ -10,19 +10,36 @@ using UnityEngine;
 
 public class TileBehaviour : MonoBehaviour
 {
+    public Vector2 gridLocation;
+    private GameManager gm;
     /// <summary>
     /// Childs whatever is on the tile
     /// </summary>
     /// <param name="collision"></param>
+    private void Start()
+    {
+        gm = FindObjectOfType<GameManager>();
+    }
     private void OnCollisionEnter(Collision collision)
     {
-        if(!collision.gameObject.GetComponent<TileBehaviour>())
+        if(collision.gameObject.GetComponent<PlayerBehaviour>())
         {
             collision.transform.SetParent(gameObject.transform);
-
-            GameManager gm = FindObjectOfType<GameManager>();
-
-            gm.TrackPlayer(gameObject);
+            gm.TrackPlayer(GetComponent<TileBehaviour>());
         }
+        /*if (collision.gameObject.GetComponent<EnemyBehavior>())
+        {
+            collision.transform.SetParent(gameObject.transform);
+            gm.TrackEnemy(GetComponent<TileBehaviour>());
+        }*/
+    }
+    public void Jiggle() {
+        StartCoroutine(MoveUpAndDown());
+    }
+    private IEnumerator MoveUpAndDown()
+    {
+        transform.position += new Vector3(0, 0.5f, 0);
+        yield return new WaitForSeconds(0.5f);
+        transform.position -= new Vector3(0, 0.5f, 0);
     }
 }
