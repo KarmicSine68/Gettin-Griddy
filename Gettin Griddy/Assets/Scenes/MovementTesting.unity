@@ -507,7 +507,7 @@ Transform:
   m_GameObject: {fileID: 963194225}
   serializedVersion: 2
   m_LocalRotation: {x: 0.38268343, y: 0, z: 0, w: 0.92387956}
-  m_LocalPosition: {x: 5, y: 10, z: -5}
+  m_LocalPosition: {x: 4.5, y: 10, z: -4.5}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
@@ -592,10 +592,11 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   player: {fileID: 5783697498280076704, guid: eaedc24f9f2ce614d9b44a938a358d09, type: 3}
   gridSpace: {fileID: 1894923049652469044, guid: 3f3292cccda260349825f898e3e5ecb0, type: 3}
-  playerTracker: {fileID: 0}
+  playerTile: {fileID: 0}
+  EnemyTiles: []
   boulder: {fileID: 5252985174513615257, guid: 3141f814348a101489cfd3c74a992208, type: 3}
-  rows: 10
-  columns: 10
+  rows: 9
+  columns: 9
 --- !u!4 &1121946167
 Transform:
   m_ObjectHideFlags: 0
@@ -899,7 +900,7 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0.5, y: 0.5}
   m_AnchorMax: {x: 0.5, y: 0.5}
-  m_AnchoredPosition: {x: 305, y: 102.899994}
+  m_AnchoredPosition: {x: 277.5, y: 91.79999}
   m_SizeDelta: {x: 160, y: 30}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &1780497217
@@ -1032,7 +1033,7 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0.5, y: 0.5}
   m_AnchorMax: {x: 0.5, y: 0.5}
-  m_AnchoredPosition: {x: 305, y: 164}
+  m_AnchoredPosition: {x: 277.5, y: 152.9}
   m_SizeDelta: {x: 160, y: 30}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &1833636882
