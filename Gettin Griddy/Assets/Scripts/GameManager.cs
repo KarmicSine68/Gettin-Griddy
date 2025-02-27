@@ -154,7 +154,7 @@ public class GameManager : MonoBehaviour
     private IEnumerator EnemyTurn()
     {
         Debug.Log("Enemy's Turn");
-
+        enemies = GameObject.FindGameObjectsWithTag(enemyTag);
         PlayedTurn = false;
 
         foreach (GameObject obj in enemies)
@@ -181,7 +181,7 @@ public class GameManager : MonoBehaviour
     private IEnumerator WorldTurn()
     {
         Debug.Log("World's Turn");
-
+        worldHazards = GameObject.FindGameObjectsWithTag(hazardTag);
         PlayedTurn = false;
 
         foreach (GameObject obj in worldHazards)
