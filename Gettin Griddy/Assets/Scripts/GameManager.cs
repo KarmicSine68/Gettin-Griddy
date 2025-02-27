@@ -23,7 +23,7 @@ public class GameManager : MonoBehaviour
 
     private bool PlayedTurn = false;
     private bool isBattleActive = true; // Battle control flag
-    private GameObject[,] grid;
+    public GameObject[,] grid;
 
     [Header("Grid Parameters")]
     [SerializeField] private int rows;
