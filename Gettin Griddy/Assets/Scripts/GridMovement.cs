@@ -81,8 +81,7 @@ public class GridMovement : MonoBehaviour
         RaycastHit hit;
         Physics.Raycast(rayOrigin, dir, out hit, currentTile.transform.localScale.x);
 
-        GameObject tile = hit.collider.gameObject;
-
-        return (!tile.GetComponentInChildren<SphereCollider>());
+        TileBehaviour tile = hit.collider.gameObject.GetComponent<TileBehaviour>();
+        return (tile.objectOnTile == null);
     }
 }

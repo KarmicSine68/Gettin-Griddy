@@ -1,8 +1,9 @@
 /******************************************************************************
- * Author: Brad Dixon
+ * Author: Brad Dixon, Tyler Bouchard
  * File Name: GameManager.cs
  * Creation Date: 2/25/2025
- * Brief: Keeps track of the status of the grid and where everything is
+ * Brief: Keeps track of the status of the grid and where everything is, controls 
+ * game play
  * ***************************************************************************/
 using System.Collections;
 using System.Collections.Generic;
@@ -11,12 +12,13 @@ using UnityEngine;
 public class GameManager : MonoBehaviour
 {
     [SerializeField] private GameObject player;
+    [SerializeField] private GameObject enemy;
     [SerializeField] private GameObject gridSpace;
     [SerializeField] public TileBehaviour playerTile;
     [SerializeField] private List<TileBehaviour> EnemyTiles;
     [SerializeField] private GameObject boulder;
 
-    GameObject[,] grid;
+    TileBehaviour[,] grid;
 
     [Header("Grid Parameters")]
     [Tooltip("How many rows are in the grid")]
@@ -29,35 +31,40 @@ public class GameManager : MonoBehaviour
     /// </summary>
     private void Start()
     {
-        grid = new GameObject[columns, rows];
+        grid = new TileBehaviour[columns, rows];
         for(int i = 0; i < rows; ++i)
         {
             for(int j = 0; j < columns; ++j)
             {
                 GameObject tile = Instantiate(gridSpace, new Vector3(j, 0, i), Quaternion.identity);
-                grid[j, i] = tile;
-                tile.GetComponent<TileBehaviour>().gridLocation = new Vector2(j, i);
+                tile.name = "Tile(" + j + ", " + i + ")";
+                grid[j, i] = tile.GetComponent<TileBehaviour>();
+                grid[j, i].gridLocation = new Vector2(j, i);
             }
         }
-        SpawnPlayer();
-        SpawnBoulder();
+        Spawn(player);
+        Spawn(boulder);
+        for (int i = 0; i < 10; i++) {
+            Spawn(enemy);
+        } 
     }
-
     /// <summary>
-    /// Spawns the player on the grid
+    /// spawn a game object on a random unoccupied tile
     /// </summary>
-    private void SpawnPlayer()
-    {
+    /// <param name="obj"></param>
+    /// pretty sure that this works fine at runtime but it has errors when it first generates enemies
+    private void Spawn(GameObject obj) {
         int x = Random.Range(0, columns);
         int y = Random.Range(0, rows);
-
+        while (grid[x,y].hasObject) {
+            x = Random.Range(0, columns);
+            y = Random.Range(0, rows);
+        }
+        grid[x, y].hasObject = true;
         Vector3 spawnPos = grid[x, y].transform.position;
-
         spawnPos += new Vector3(.5f, 1.5f, .5f);
-
-        Instantiate(player, spawnPos, Quaternion.identity);
+        Instantiate(obj, spawnPos, Quaternion.identity);
     }
-
     /// <summary>
     /// Updates where in the grid the player is
     /// </summary>
@@ -65,6 +72,7 @@ public class GameManager : MonoBehaviour
     public void TrackPlayer(TileBehaviour tileScript)
     {
         playerTile = tileScript;
+
     }
     public void TrackEnemy(TileBehaviour tileScript)
     {
@@ -101,10 +109,12 @@ public class GameManager : MonoBehaviour
         {
             print("There're no tiles that way goofy");
         } else {
-            foreach (TileBehaviour t in tilesToAttack)
+            foreach (TileBehaviour tile in tilesToAttack)
             {
-                t.FlashRed();
-                // check to see if the tile has an enemy on it then call that enemys "take danage" function
+                tile.FlashRed();
+                if (tile.objectOnTile != null && tile.objectOnTile.TryGetComponent<EnemyTakeDamage>(out EnemyTakeDamage enemy)) {
+                    enemy.TakeDamage();
+                }
             }
         }
     }
@@ -113,26 +123,5 @@ public class GameManager : MonoBehaviour
             return false;
         }
         return true;
-    }
-    /// <summary>
-    /// Spawns a boulder that obstructs the player's movement
-    /// </summary>
-    private void SpawnBoulder()
-    {
-        int x = Random.Range(0, columns);
-        int y = Random.Range(0, rows);
-
-        Vector3 spawnPos = grid[x, y].transform.position;
-
-        spawnPos += new Vector3(.5f, 1.5f, .5f);
-
-        if (grid[x, y] == playerTile)
-        {
-            SpawnBoulder();
-        }
-        else
-        {
-            Instantiate(boulder, spawnPos, Quaternion.identity);
-        }
     }
 }

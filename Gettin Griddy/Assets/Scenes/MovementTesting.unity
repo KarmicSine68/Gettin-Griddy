@@ -591,6 +591,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   player: {fileID: 5783697498280076704, guid: eaedc24f9f2ce614d9b44a938a358d09, type: 3}
+  enemy: {fileID: 8998121906072561065, guid: 5fd55a35abbaa3f46964715dc1db1eaf, type: 3}
   gridSpace: {fileID: 1894923049652469044, guid: 3f3292cccda260349825f898e3e5ecb0, type: 3}
   playerTile: {fileID: 0}
   EnemyTiles: []
@@ -900,7 +901,7 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0.5, y: 0.5}
   m_AnchorMax: {x: 0.5, y: 0.5}
-  m_AnchoredPosition: {x: 277.5, y: 91.79999}
+  m_AnchoredPosition: {x: 365, y: 141.9}
   m_SizeDelta: {x: 160, y: 30}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &1780497217
@@ -1033,7 +1034,7 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0.5, y: 0.5}
   m_AnchorMax: {x: 0.5, y: 0.5}
-  m_AnchoredPosition: {x: 277.5, y: 152.9}
+  m_AnchoredPosition: {x: 365, y: 203}
   m_SizeDelta: {x: 160, y: 30}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &1833636882

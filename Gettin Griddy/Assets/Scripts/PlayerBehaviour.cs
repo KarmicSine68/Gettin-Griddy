@@ -1,5 +1,5 @@
 /******************************************************************************
- * Author: Brad Dixon
+ * Author: Brad Dixon, Tyler Bouchard
  * File Name: PlayerBehaviour.cs
  * Creation Date 2/25/2025
  * Brief: Controls actions for the player
@@ -61,7 +61,6 @@ public class PlayerBehaviour : GridMovement
         if (!attacking) {
             canMove = false;
             Vector2 moveDir = playerMove.ReadValue<Vector2>();
-
             if (moveDir.x > 0)
             {
                 MovePlayer(Vector3.right, "Right");

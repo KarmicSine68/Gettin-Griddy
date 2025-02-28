@@ -1,3 +1,9 @@
+/******************************************************************************
+ * Author: Tyler Bouchard
+ * File Name: UIButtonsScript.cs
+ * Creation Date: 2/19/2025
+ * Brief: keeps track of the lives
+ * ***************************************************************************/
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
