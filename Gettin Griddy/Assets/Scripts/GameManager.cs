@@ -18,6 +18,9 @@ public class GameManager : MonoBehaviour
     [SerializeField] private List<TileBehaviour> EnemyTiles;
     [SerializeField] private GameObject boulder;
 
+    public bool playerTurn = true;
+    public int moveLimit = 3;
+
     TileBehaviour[,] grid;
 
     [Header("Grid Parameters")]
@@ -72,15 +75,17 @@ public class GameManager : MonoBehaviour
     public void TrackPlayer(TileBehaviour tileScript)
     {
         playerTile = tileScript;
-
     }
     public void TrackEnemy(TileBehaviour tileScript)
     {
         EnemyTiles.Add(tileScript);
     }
     public void Attack(Vector2 attackDir) {
+        playerTurn = false;
         List<TileBehaviour> tilesToAttack = new List<TileBehaviour>();
         Vector2 playerPos = playerTile.gridLocation;
+
+        //finding the tiles that it needs to attack
         if (gridHasPosition(new Vector2((int)(playerPos.x + attackDir.x), (int)(playerPos.y + attackDir.y)))) {
             tilesToAttack.Add(grid[(int)(playerPos.x + attackDir.x), (int)(playerPos.y + attackDir.y)].GetComponent<TileBehaviour>());
         }
@@ -105,6 +110,8 @@ public class GameManager : MonoBehaviour
                 tilesToAttack.Add(grid[(int)(playerPos.x + attackDir.x - 1), (int)(playerPos.y + attackDir.y)].GetComponent<TileBehaviour>());
             }
         }
+
+        //applying damage to enemies on the tiles it found
         if (tilesToAttack.Count <= 0)
         {
             print("There're no tiles that way goofy");
@@ -117,7 +124,16 @@ public class GameManager : MonoBehaviour
                 }
             }
         }
+
+        //DoEnemyTurn(); this is where you will call the function that does the enemy turn logic
+
+        print("Enemies have played");
+        PlayerBehaviour player = playerTile.objectOnTile.GetComponent<PlayerBehaviour>();
+        player.TurnOrginTile = playerTile.gridLocation;
+        player.attacking = false;
+        playerTurn = true;
     }
+
     private bool gridHasPosition(Vector2 pos) {
         if (pos.x < 0 || pos.x >= rows || pos.y < 0 || pos.y >= columns) {
             return false;

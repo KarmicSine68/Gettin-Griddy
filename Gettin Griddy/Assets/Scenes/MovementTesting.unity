@@ -596,6 +596,8 @@ MonoBehaviour:
   playerTile: {fileID: 0}
   EnemyTiles: []
   boulder: {fileID: 5252985174513615257, guid: 3141f814348a101489cfd3c74a992208, type: 3}
+  playerTurn: 1
+  moveLimit: 3
   rows: 9
   columns: 9
 --- !u!4 &1121946167
