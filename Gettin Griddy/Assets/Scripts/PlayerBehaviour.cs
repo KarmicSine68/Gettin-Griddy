@@ -47,7 +47,7 @@ public class PlayerBehaviour : GridMovement
 
     private void EndTurn(InputAction.CallbackContext obj)
     {
-        gm.playerTurn = false;
+        gm.DoEnemyTurn();
     }
 
     private void FindStartTile() {

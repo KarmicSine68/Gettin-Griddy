@@ -125,15 +125,23 @@ public class GameManager : MonoBehaviour
             }
         }
 
-        //DoEnemyTurn(); this is where you will call the function that does the enemy turn logic
+        //this is where you will call the function that does the enemy turn logic
+        DoEnemyTurn(); 
 
+        
+    }
+
+    public void DoEnemyTurn() {
+        
+        //add code
+
+        //switching back to player turn
         print("Enemies have played");
         PlayerBehaviour player = playerTile.objectOnTile.GetComponent<PlayerBehaviour>();
         player.TurnOrginTile = playerTile.gridLocation;
         player.attacking = false;
         playerTurn = true;
     }
-
     private bool gridHasPosition(Vector2 pos) {
         if (pos.x < 0 || pos.x >= rows || pos.y < 0 || pos.y >= columns) {
             return false;
