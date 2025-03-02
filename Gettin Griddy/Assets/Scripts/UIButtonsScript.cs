@@ -1,3 +1,9 @@
+/******************************************************************************
+ * Author: Tyler Bouchard
+ * File Name: UIButtonsScript.cs
+ * Creation Date: 2/19/2025
+ * Brief: script for menu bottons
+ * ***************************************************************************/
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;

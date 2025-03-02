@@ -1,9 +1,10 @@
 /******************************************************************************
- * Author: Brad Dixon
+ * Author: Brad Dixon, Tyler Bouchard
  * File Name: PlayerBehaviour.cs
  * Creation Date 2/25/2025
  * Brief: Controls actions for the player
  * ***************************************************************************/
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
@@ -13,20 +14,65 @@ public class PlayerBehaviour : GridMovement
 {
     InputActionMap playerMap;
     InputAction playerMove;
+    InputAction playerAttack;
+    InputAction playerAttackToggle;
+    InputAction endTurn;
 
-    bool canMove = true;
+    private GameManager gm;
+    public bool attacking = false;
+    public Vector2 TurnOrginTile;
 
     /// <summary>
     /// Enables the new input system
     /// </summary>
     private void Awake()
     {
+        gm = FindObjectOfType<GameManager>();
         playerMap = GetComponent<PlayerInput>().currentActionMap;
         playerMap.Enable();
 
         playerMove = playerMap.FindAction("Movement");
+        playerAttack = playerMap.FindAction("Attack"); ;
+        playerAttackToggle = playerMap.FindAction("AttackToggle");
+        endTurn = playerMap.FindAction("EndTurn"); ;
 
         playerMove.started += PlayerMove_started;
+        playerAttack.started += PlayerAttack;
+        playerAttackToggle.started += ToggleAttackMode;
+        endTurn.started += EndTurn;
+
+        FindStartTile();
+        TurnOrginTile = gm.playerTile.gridLocation;
+    }
+
+    private void EndTurn(InputAction.CallbackContext obj)
+    {
+        gm.DoEnemyTurn();
+    }
+
+    private void FindStartTile() {
+        float rayDistance = 2f;
+        RaycastHit[] hits = Physics.RaycastAll(transform.position, Vector3.down, rayDistance);
+        foreach (RaycastHit hit in hits)
+        {
+            if (hit.collider.gameObject.TryGetComponent<TileBehaviour>(out TileBehaviour tile))
+            {
+                gm.TrackPlayer(tile);
+            }
+        } 
+    }
+
+    private void PlayerAttack(InputAction.CallbackContext obj)
+    {
+        if (attacking) {
+            Vector2 attackDir = playerMove.ReadValue<Vector2>();
+            gm.Attack(attackDir);
+        }
+    }
+
+    private void ToggleAttackMode(InputAction.CallbackContext obj)
+    {
+        attacking = !attacking;
     }
 
     /// <summary>
@@ -35,31 +81,63 @@ public class PlayerBehaviour : GridMovement
     /// <param name="obj"></param>
     private void PlayerMove_started(InputAction.CallbackContext obj)
     {
-        canMove = false;
-        Vector2 moveDir = playerMove.ReadValue<Vector2>();
+        if (!attacking && gm.playerTurn) {
+            Vector2 moveDir = playerMove.ReadValue<Vector2>();
+            if (moveDir.x > 0)
+            {
+                if (withinTurnsMoveLimit(moveDir)) {
+                    MovePlayer(Vector3.right, "Right");
+                }   
+            }
+            else if (moveDir.x < 0)
+            {
+                if (withinTurnsMoveLimit(moveDir))
+                {
+                    MovePlayer(Vector3.left, "Left");
+                }
+            }
+            else if (moveDir.y > 0)
+            {
+                if (withinTurnsMoveLimit(moveDir))
+                {
+                    MovePlayer(Vector3.forward, "Up");
+                }
+            }
+            else if (moveDir.y < 0)
+            {
+                if (withinTurnsMoveLimit(moveDir))
+                {
+                    MovePlayer(Vector3.back, "Down");
+                }
+            }
+        }
+    }
 
-        if(moveDir.x > 0)
-        {
-            MovePlayer(Vector3.right, "Right");
+    private bool withinTurnsMoveLimit(Vector2 moveDir)
+    {
+        int tilesMovedX = Mathf.Abs(((int)gm.playerTile.gridLocation.x + (int)moveDir.x) - (int)TurnOrginTile.x);
+        int tilesMovedY = Mathf.Abs(((int)gm.playerTile.gridLocation.y + (int)moveDir.y) - (int)TurnOrginTile.y);
+
+        if ((tilesMovedX + tilesMovedY) <= gm.moveLimit) {
+            print("You have moved " + (tilesMovedX + tilesMovedY) + " tiles");
+        } else {
+            print("Tile is to far away to move to it");
         }
-        else if(moveDir.x < 0)
+
+        if ((tilesMovedX + tilesMovedY) <= gm.moveLimit)
         {
-            MovePlayer(Vector3.left, "Left");
+            return true;
         }
-        else if(moveDir.y > 0)
-        {
-            MovePlayer(Vector3.forward, "Up");
-        }
-        else if(moveDir.y < 0)
-        {
-            MovePlayer(Vector3.back, "Down");
-        }
+        return false;
     }
 
     private void OnDisable()
     {
         playerMap.Disable();
-
+        
         playerMove.started -= PlayerMove_started;
+        playerAttack.started -= ToggleAttackMode;
+        playerAttackToggle.started -= PlayerAttack;
+        endTurn.started -= EndTurn;
     }
 }

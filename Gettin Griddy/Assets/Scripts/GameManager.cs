@@ -1,11 +1,10 @@
 /******************************************************************************
- * Author: Brad Dixon
+ * Author: Brad Dixon, Tyler Bouchard
  * File Name: GameManager.cs
  * Creation Date: 2/25/2025
- * Last Changes: Jake Gorski, 2/26/2025
- * Brief: Keeps track of the status of the grid and where everything is. Handles turn order Player/Enemy/Hazards and can end battles.
+ * Brief: Keeps track of the status of the grid and where everything is, controls 
+ * game play
  * ***************************************************************************/
-
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
@@ -13,189 +12,140 @@ using UnityEngine;
 public class GameManager : MonoBehaviour
 {
     [SerializeField] private GameObject player;
+    [SerializeField] private GameObject enemy;
     [SerializeField] private GameObject gridSpace;
-    [SerializeField] private GameObject playerTracker;
+    [SerializeField] public TileBehaviour playerTile;
+    [SerializeField] private List<TileBehaviour> EnemyTiles;
     [SerializeField] private GameObject boulder;
-    [SerializeField] private GameObject[] enemies;
-    [SerializeField] private string enemyTag = "Enemy";
-    [SerializeField] private GameObject[] worldHazards;
-    [SerializeField] private string hazardTag = "Hazard";
 
-    private bool PlayedTurn = false;
-    private bool isBattleActive = true; // Battle control flag
-    public GameObject[,] grid;
+    public bool playerTurn = true;
+    public int moveLimit = 3;
+
+    TileBehaviour[,] grid;
 
     [Header("Grid Parameters")]
+    [Tooltip("How many rows are in the grid")]
     [SerializeField] private int rows;
+    [Tooltip("How many columns are in the grid")]
     [SerializeField] private int columns;
 
-    [SerializeField] private int TurnState = 1;
-
+    /// <summary>
+    /// Creates the grid and spwans things in
+    /// </summary>
     private void Start()
     {
-        grid = new GameObject[columns, rows]; 
-        for (int i = 0; i < rows; ++i)
+        grid = new TileBehaviour[columns, rows];
+        for(int i = 0; i < rows; ++i)
         {
-            for (int j = 0; j < columns; ++j)
+            for(int j = 0; j < columns; ++j)
             {
                 GameObject tile = Instantiate(gridSpace, new Vector3(j, 0, i), Quaternion.identity);
-                grid[j, i] = tile;
+                tile.name = "Tile(" + j + ", " + i + ")";
+                grid[j, i] = tile.GetComponent<TileBehaviour>();
+                grid[j, i].gridLocation = new Vector2(j, i);
+            }
+        }
+        Spawn(player);
+        Spawn(boulder);
+        for (int i = 0; i < 10; i++) {
+            Spawn(enemy);
+        } 
+    }
+    /// <summary>
+    /// spawn a game object on a random unoccupied tile
+    /// </summary>
+    /// <param name="obj"></param>
+    /// pretty sure that this works fine at runtime but it has errors when it first generates enemies
+    private void Spawn(GameObject obj) {
+        int x = Random.Range(0, columns);
+        int y = Random.Range(0, rows);
+        while (grid[x,y].hasObject) {
+            x = Random.Range(0, columns);
+            y = Random.Range(0, rows);
+        }
+        grid[x, y].hasObject = true;
+        Vector3 spawnPos = grid[x, y].transform.position;
+        spawnPos += new Vector3(.5f, 1.5f, .5f);
+        Instantiate(obj, spawnPos, Quaternion.identity);
+    }
+    /// <summary>
+    /// Updates where in the grid the player is
+    /// </summary>
+    /// <param name="tile"></param>
+    public void TrackPlayer(TileBehaviour tileScript)
+    {
+        playerTile = tileScript;
+    }
+    public void TrackEnemy(TileBehaviour tileScript)
+    {
+        EnemyTiles.Add(tileScript);
+    }
+    public void Attack(Vector2 attackDir) {
+        playerTurn = false;
+        List<TileBehaviour> tilesToAttack = new List<TileBehaviour>();
+        Vector2 playerPos = playerTile.gridLocation;
+
+        //finding the tiles that it needs to attack
+        if (gridHasPosition(new Vector2((int)(playerPos.x + attackDir.x), (int)(playerPos.y + attackDir.y)))) {
+            tilesToAttack.Add(grid[(int)(playerPos.x + attackDir.x), (int)(playerPos.y + attackDir.y)].GetComponent<TileBehaviour>());
+        }
+        if (attackDir.x != 0)
+        {
+            if (gridHasPosition(new Vector2((int)(playerPos.x + attackDir.x), (int)(playerPos.y + attackDir.y + 1))))
+            {
+                tilesToAttack.Add(grid[(int)(playerPos.x + attackDir.x), (int)(playerPos.y + attackDir.y + 1)].GetComponent<TileBehaviour>());
+            }
+            if (gridHasPosition(new Vector2((int)(playerPos.x + attackDir.x), (int)(playerPos.y + attackDir.y - 1))))
+            {
+                tilesToAttack.Add(grid[(int)(playerPos.x + attackDir.x), (int)(playerPos.y + attackDir.y - 1)].GetComponent<TileBehaviour>());
+            }
+        }
+        else {
+            if (gridHasPosition(new Vector2((int)(playerPos.x + attackDir.x + 1), (int)(playerPos.y + attackDir.y))))
+            {
+                tilesToAttack.Add(grid[(int)(playerPos.x + attackDir.x + 1), (int)(playerPos.y + attackDir.y)].GetComponent<TileBehaviour>());
+            }
+            if (gridHasPosition(new Vector2((int)(playerPos.x + attackDir.x - 1), (int)(playerPos.y + attackDir.y))))
+            {
+                tilesToAttack.Add(grid[(int)(playerPos.x + attackDir.x - 1), (int)(playerPos.y + attackDir.y)].GetComponent<TileBehaviour>());
             }
         }
 
-        enemies = GameObject.FindGameObjectsWithTag(enemyTag);
-        worldHazards = GameObject.FindGameObjectsWithTag(hazardTag);
-
-        SpawnPlayer();
-        SpawnBoulder();
-        
-        StartCoroutine(GameLoop()); // Start the turn system
-    }
-
-    /// <summary>
-    /// Main turn loop that runs sequentially.
-    /// Ends when the battle is no longer active.
-    /// </summary>
-    private IEnumerator GameLoop()
-    {
-        while (isBattleActive) // Run while battle is active
+        //applying damage to enemies on the tiles it found
+        if (tilesToAttack.Count <= 0)
         {
-            yield return StartCoroutine(PlayerTurn());
-            yield return StartCoroutine(EnemyTurn());
-            yield return StartCoroutine(WorldTurn());
-        }
-
-        Debug.Log("Battle has ended.");
-        OnBattleEnd(); // Call any post-battle logic
-    }
-
-    /// <summary>
-    /// Ends the battle and stops the game loop.
-    /// </summary>
-    public void EndBattle()
-    {
-        isBattleActive = false;
-    }
-
-    /// <summary>
-    /// Handles any post-battle logic (e.g., rewards, returning to menu).
-    /// </summary>
-    private void OnBattleEnd()
-    {
-        Debug.Log("Battle Over! Returning to menu or next scene...");
-        // Add transition logic here (e.g., load scene, show UI)
-    }
-
-    /// <summary>
-    /// Spawns the player on a random grid tile.
-    /// </summary>
-    private void SpawnPlayer()
-    {
-        int x = Random.Range(0, columns);
-        int y = Random.Range(0, rows);
-
-        Vector3 spawnPos = grid[x, y].transform.position;
-        spawnPos += new Vector3(.5f, 1.5f, .5f);
-
-        playerTracker = grid[x, y]; // Track player position
-        Instantiate(player, spawnPos, Quaternion.identity);
-    }
-
-    /// <summary>
-    /// Spawns a boulder that obstructs movement.
-    /// Ensures it does not spawn on the player's position.
-    /// </summary>
-    private void SpawnBoulder()
-    {
-        int x, y;
-        do
-        {
-            x = Random.Range(0, columns);
-            y = Random.Range(0, rows);
-        } 
-        while (grid[x, y] == playerTracker); // Ensure it doesn't spawn on the player
-
-        Vector3 spawnPos = grid[x, y].transform.position;
-        spawnPos += new Vector3(.5f, 1.5f, .5f);
-
-        Instantiate(boulder, spawnPos, Quaternion.identity);
-    }
-
-    /// <summary>
-    /// Updates where in the grid the player is located.
-    /// </summary>
-    /// <param name="tile">The new tile the player is on</param>
-    public void TrackPlayer(GameObject tile)
-    {
-        playerTracker = tile;
-
-        for (int i = 0; i < rows; ++i)
-        {
-            for (int j = 0; j < columns; ++j)
+            print("There're no tiles that way goofy");
+        } else {
+            foreach (TileBehaviour tile in tilesToAttack)
             {
-                if (grid[j, i] == playerTracker)
-                {
-                    grid[j, i] = playerTracker;
+                tile.FlashRed();
+                if (tile.objectOnTile != null && tile.objectOnTile.TryGetComponent<EnemyTakeDamage>(out EnemyTakeDamage enemy)) {
+                    enemy.TakeDamage();
                 }
             }
         }
+
+        //this is where you will call the function that does the enemy turn logic
+        DoEnemyTurn(); 
+
+        
     }
 
-    private IEnumerator PlayerTurn()
-    {
-        Debug.Log("Player's Turn");
+    public void DoEnemyTurn() {
+        
+        //add code
 
-        PlayedTurn = false;
-        yield return new WaitUntil(() => PlayedTurn);
-
-        TurnState = 2;
+        //switching back to player turn
+        print("Enemies have played");
+        PlayerBehaviour player = playerTile.objectOnTile.GetComponent<PlayerBehaviour>();
+        player.TurnOrginTile = playerTile.gridLocation;
+        player.attacking = false;
+        playerTurn = true;
     }
-
-    private IEnumerator EnemyTurn()
-    {
-        Debug.Log("Enemy's Turn");
-        enemies = GameObject.FindGameObjectsWithTag(enemyTag);
-        PlayedTurn = false;
-
-        foreach (GameObject obj in enemies)
-        {
-            MovingObject movingScript = obj.GetComponent<MovingObject>();
-            if (movingScript != null)
-            {
-                yield return StartCoroutine(movingScript.MoveObject());
-            }
+    private bool gridHasPosition(Vector2 pos) {
+        if (pos.x < 0 || pos.x >= rows || pos.y < 0 || pos.y >= columns) {
+            return false;
         }
-
-        PlayedTurn = true;
-        yield return new WaitUntil(() => PlayedTurn);
-
-        TurnState = 3;
-
-        // Check if all enemies are defeated
-        if (GameObject.FindGameObjectsWithTag(enemyTag).Length == 0)
-        {
-            EndBattle();
-        }
-    }
-
-    private IEnumerator WorldTurn()
-    {
-        Debug.Log("World's Turn");
-        worldHazards = GameObject.FindGameObjectsWithTag(hazardTag);
-        PlayedTurn = false;
-
-        foreach (GameObject obj in worldHazards)
-        {
-            Hazard hazardScript = obj.GetComponent<Hazard>();
-            if (hazardScript != null)
-            {
-                hazardScript.TickDownTimer();
-            }
-        }
-
-        PlayedTurn = true;
-        yield return new WaitUntil(() => PlayedTurn);
-
-        TurnState = 1;
+        return true;
     }
 }
