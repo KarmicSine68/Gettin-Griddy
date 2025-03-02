@@ -13,6 +13,11 @@ public class GridMovement : MonoBehaviour
     //The tile the player is on
     [SerializeField] GameObject currentTile;
 
+    //The amount of times an object can move
+    [SerializeField] int maxMoves;
+
+    int currentMovesLeft;
+
     /// <summary>
     /// Moves the player to a new space if elligible
     /// </summary>
@@ -52,6 +57,8 @@ public class GridMovement : MonoBehaviour
             transform.position = newPos;
 
             GetTile();
+
+            currentMovesLeft--;
         }
     }
 
@@ -83,5 +90,10 @@ public class GridMovement : MonoBehaviour
 
         TileBehaviour tile = hit.collider.gameObject.GetComponent<TileBehaviour>();
         return (tile.objectOnTile == null);
+    }
+
+    public void ResetMovesToMax()
+    {
+        currentMovesLeft = maxMoves;
     }
 }
