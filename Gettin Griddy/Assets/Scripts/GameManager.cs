@@ -15,7 +15,7 @@ public class GameManager : MonoBehaviour
     [SerializeField] private GameObject enemy;
     [SerializeField] private GameObject gridSpace;
     [SerializeField] public TileBehaviour playerTile;
-    [SerializeField] private List<TileBehaviour> EnemyTiles;
+    [SerializeField] public List<TileBehaviour> EnemyTiles;
     [SerializeField] private GameObject boulder;
 
     public bool playerTurn = true;
@@ -47,7 +47,7 @@ public class GameManager : MonoBehaviour
         }
         Spawn(player);
         Spawn(boulder);
-        for (int i = 0; i < 1; i++) {
+        for (int i = 0; i < 10; i++) {
             Spawn(enemy);
         } 
     }
@@ -93,14 +93,8 @@ public class GameManager : MonoBehaviour
     {
         EnemyTiles.Add(tileScript);
     }
-    public void RemoveEnemy(GameObject enemy) {
-        print("called");
-        foreach (TileBehaviour tile in EnemyTiles) {
-            if (tile.objectOnTile == enemy) {
-                EnemyTiles.Remove(tile);
-                break;
-            }
-        }
+    public void RemoveEnemy(TileBehaviour enemy) {
+        EnemyTiles.Remove(enemy);
     }
     public List<TileBehaviour> FindAttackTiles(Vector2 attackDir) {
         List<TileBehaviour> tilesToAttack = new List<TileBehaviour>();
@@ -134,8 +128,10 @@ public class GameManager : MonoBehaviour
         return tilesToAttack;  
     }
 
-    public void DoEnemyTurn() {
-        print("Enemies have played");
+    public void DoEnemyTurn() { 
+        for(int i = EnemyTiles.Count; i > 0; i--) {
+            EnemyTiles[i - 1].objectOnTile.GetComponent<EnemyMovement>().DoEnemyMovement();
+        }
         EndTurn();
     }
     private bool gridHasPosition(Vector2 pos) {

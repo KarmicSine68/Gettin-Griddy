@@ -21,12 +21,12 @@ public class TileBehaviour : MonoBehaviour
     private void OnCollisionEnter(Collision collision)
     {
         objectOnTile = collision.gameObject;
-        if(collision.gameObject.GetComponent<PlayerBehaviour>())
+        if(objectOnTile.GetComponent<PlayerBehaviour>())
         {
             //collision.transform.SetParent(gameObject.transform);
             gm.TrackPlayer(GetComponent<TileBehaviour>());
         }
-        if (collision.gameObject.GetComponent<EnemyTakeDamage>())
+        if (objectOnTile.GetComponent<EnemyTakeDamage>())
         {
             //collision.transform.SetParent(gameObject.transform);
             gm.TrackEnemy(GetComponent<TileBehaviour>());
@@ -35,6 +35,10 @@ public class TileBehaviour : MonoBehaviour
     private void OnCollisionExit(Collision collision)
     {
         objectOnTile = null;
+        if (collision.gameObject.GetComponent<EnemyTakeDamage>()) {
+            print(collision.gameObject);
+            gm.RemoveEnemy(gameObject.GetComponent<TileBehaviour>());
+        }
     }
     public TileBehaviour GetNeighbor(Vector3 dir) {
         Vector3 rayOrgin = transform.position;

@@ -48,7 +48,6 @@ public class PlayerBehaviour : GridMovement
 
     private void EndTurn(InputAction.CallbackContext obj)
     {
-        print(currentTile);
         gm.EndTurn();
     }
 

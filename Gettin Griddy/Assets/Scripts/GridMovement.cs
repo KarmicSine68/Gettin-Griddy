@@ -11,10 +11,15 @@ using UnityEngine;
 public class GridMovement : MonoBehaviour
 {
     //The tile the player is on
-    protected TileBehaviour currentTile;
-    
+    public TileBehaviour currentTile;
+
+    private void Awake()
+    {
+        currentTile = GetTile();
+    }
+
     //moves the player to a new space
-    protected void Move(Vector3 dir)
+    protected bool Move(Vector3 dir)
     {
         if(currentTile == null)
         {
@@ -28,7 +33,9 @@ public class GridMovement : MonoBehaviour
             transform.position = newPos;
             currentTile.hasObject = false;
             currentTile = GetTile();
+            return true;
         }
+        return false;
     }
 
     //figures out if a tile has a neighboring tile in that direction
