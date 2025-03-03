@@ -30,6 +30,7 @@ public class EnemyTakeDamage : MonoBehaviour
     }
     private void Die() {
         FindObjectOfType<ScoreManager>().IncreaseScore();
+        gm.RemoveEnemy(gameObject);
         Destroy(gameObject);
     }
 }

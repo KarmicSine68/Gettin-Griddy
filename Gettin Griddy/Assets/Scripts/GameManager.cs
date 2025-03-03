@@ -69,19 +69,16 @@ public class GameManager : MonoBehaviour
         Instantiate(obj, spawnPos, Quaternion.identity);
     }
     public void EndTurn() {
-        print(playerTurn);
         if (playerTurn)
         {
             PlayerBehaviour player = playerTile.objectOnTile.GetComponent<PlayerBehaviour>();
             player.TurnOrginTile = playerTile.gridLocation;
             player.attacking = false;
             playerTurn = false;
-            print("ended turn");
             DoEnemyTurn();
         }
         else {
             playerTurn = true;
-            print("players turn again");
         }
     }
     /// <summary>
@@ -95,6 +92,15 @@ public class GameManager : MonoBehaviour
     public void TrackEnemy(TileBehaviour tileScript)
     {
         EnemyTiles.Add(tileScript);
+    }
+    public void RemoveEnemy(GameObject enemy) {
+        print("called");
+        foreach (TileBehaviour tile in EnemyTiles) {
+            if (tile.objectOnTile == enemy) {
+                EnemyTiles.Remove(tile);
+                break;
+            }
+        }
     }
     public List<TileBehaviour> FindAttackTiles(Vector2 attackDir) {
         List<TileBehaviour> tilesToAttack = new List<TileBehaviour>();
@@ -130,7 +136,6 @@ public class GameManager : MonoBehaviour
 
     public void DoEnemyTurn() {
         print("Enemies have played");
-        
         EndTurn();
     }
     private bool gridHasPosition(Vector2 pos) {
