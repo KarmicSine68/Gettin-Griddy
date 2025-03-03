@@ -13,18 +13,29 @@ public class EnemyMovement : MonoBehaviour
     //finds the next tile that the enemy should move to
     public void MoveTowardsPlayer(Vector2 startingTile)
     {
+        bool moved = false;
         int DistanceToPlayerX = (int)gm.playerTile.gridLocation.x - (int)startingTile.x;
         int DistanceToPlayerY = (int)gm.playerTile.gridLocation.y - (int)startingTile.y;
         Vector2 newTileDirection;
         if (Mathf.Abs(DistanceToPlayerX) > Mathf.Abs(DistanceToPlayerY))
         {
             newTileDirection = new Vector2(Mathf.Sign(DistanceToPlayerX), 0);
-        } else {
+            Vector2 newTile = new Vector2(startingTile.x + newTileDirection.x, startingTile.y + newTileDirection.y);
+            if (!gm.grid[(int)newTile.x, (int)newTile.y].hasObject)
+            {
+                gameObject.transform.position = gm.grid[(int)newTile.x, (int)newTile.y].gameObject.transform.position;
+                moved = true;
+            }
+        }
+        if (!moved) {
             newTileDirection = new Vector2(0, Mathf.Sign(DistanceToPlayerY));
+            Vector2 newTile = new Vector2(startingTile.x + newTileDirection.x, startingTile.y + newTileDirection.y);
+            if (!gm.grid[(int)newTile.x, (int)newTile.y].hasObject)
+            {
+                gameObject.transform.position = gm.grid[(int)newTile.x, (int)newTile.y].gameObject.transform.position;
+                moved = true;
+            }
         }
-        Vector2 newTile = new Vector2(startingTile.x + newTileDirection.x, startingTile.y + newTileDirection.y);
-        if (!gm.grid[(int)newTile.x, (int)newTile.y].hasObject) {
-            gameObject.transform.position = gm.grid[(int)newTile.x, (int)newTile.y].gameObject.transform.position;
-        }
+        print(gameObject.name + " Moved = " + moved);
     }
 }

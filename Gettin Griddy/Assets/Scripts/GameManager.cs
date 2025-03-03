@@ -15,7 +15,7 @@ public class GameManager : MonoBehaviour
     [SerializeField] private GameObject enemy;
     [SerializeField] private GameObject gridSpace;
     [SerializeField] public TileBehaviour playerTile;
-    [SerializeField] public List<TileBehaviour> tilesWithEnemies;
+    [SerializeField] private List<TileBehaviour> EnemyTiles;
     [SerializeField] private GameObject boulder;
 
     public bool playerTurn = true;
@@ -78,13 +78,12 @@ public class GameManager : MonoBehaviour
     }
     public void TrackEnemy(TileBehaviour tileScript)
     {
-        tilesWithEnemies.Add(tileScript);
+        EnemyTiles.Add(tileScript);
     }
-    public void RemoveEnemy(GameObject enemy)
-    {
-        foreach (TileBehaviour tile in tilesWithEnemies) {
-            if (tile.objectOnTile == enemy) {
-                tilesWithEnemies.Remove(tile);
+    public void RemoveEnemy(GameObject obj) {
+        foreach (TileBehaviour tile in EnemyTiles) {
+            if (tile.objectOnTile = obj) {
+                EnemyTiles.Remove(tile);
                 break;
             }
         }
@@ -141,13 +140,8 @@ public class GameManager : MonoBehaviour
     }
 
     public void DoEnemyTurn() {
-
-        foreach (TileBehaviour tile in tilesWithEnemies) {
-            if (tile.objectOnTile.TryGetComponent<EnemyMovement>(out EnemyMovement enemy)) {
-                enemy.MoveTowardsPlayer();
-            }
-            //if () { }
-        }
+        
+        //add code
 
         //switching back to player turn
         print("Enemies have played");
