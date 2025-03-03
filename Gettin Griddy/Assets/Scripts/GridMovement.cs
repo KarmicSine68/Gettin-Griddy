@@ -11,16 +11,9 @@ using UnityEngine;
 public class GridMovement : MonoBehaviour
 {
     //The tile the player is on
-    [SerializeField] TileBehaviour currentTile;
-
-    //The amount of times an object can move
-    [SerializeField] int maxMoves;
-
-    int currentMovesLeft;
+    protected TileBehaviour currentTile;
     
-    /// <summary>
-    /// Moves the player to a new space if elligible
-    /// </summary>
+    //moves the player to a new space
     protected void Move(Vector3 dir)
     {
         if(currentTile == null)
@@ -35,23 +28,16 @@ public class GridMovement : MonoBehaviour
             transform.position = newPos;
             currentTile.hasObject = false;
             currentTile = GetTile();
-
-            currentMovesLeft--;
         }
     }
 
-    /// <summary>
-    /// Returns true if there is a tile in that direction
-    /// </summary>
-    /// <returns></returns>
+    //figures out if a tile has a neighboring tile in that direction
     protected bool HasTile(Vector3 dir)
     {
         return currentTile.HasNeighbor(dir);
     }
 
-    /// <summary>
-    /// Gets the current cube the player is on
-    /// </summary>
+    //returns the script of the tile that the player is on
     protected TileBehaviour GetTile()
     {
         float rayDistance = 2f;
@@ -60,21 +46,15 @@ public class GridMovement : MonoBehaviour
         {
             if (hit.collider.gameObject.TryGetComponent<TileBehaviour>(out TileBehaviour tile))
             {
-                //print(tile.gameObject.name);
                 return tile;
             }
         }
         print(gameObject.name + " could not find current tile");
         return null;
     }
-
+    //tells you if the tile you are trying to move to is occupied or not
     protected bool TileIsEmpty(Vector3 dir)
     {
         return !currentTile.GetNeighbor(dir).hasObject;
-    }
-
-    public void ResetMovesToMax()
-    {
-        currentMovesLeft = maxMoves;
     }
 }

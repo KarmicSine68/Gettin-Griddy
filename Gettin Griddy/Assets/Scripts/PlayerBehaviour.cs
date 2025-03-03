@@ -43,10 +43,12 @@ public class PlayerBehaviour : GridMovement
 
         FindStartTile();
         TurnOrginTile = gm.playerTile.gridLocation;
+        
     }
 
     private void EndTurn(InputAction.CallbackContext obj)
     {
+        print(currentTile);
         gm.EndTurn();
     }
 
