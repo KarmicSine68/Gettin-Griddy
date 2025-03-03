@@ -47,7 +47,7 @@ public class PlayerBehaviour : GridMovement
 
     private void EndTurn(InputAction.CallbackContext obj)
     {
-        gm.DoEnemyTurn();
+        gm.EndTurn();
     }
 
     private void FindStartTile() {
@@ -66,7 +66,18 @@ public class PlayerBehaviour : GridMovement
     {
         if (attacking) {
             Vector2 attackDir = playerMove.ReadValue<Vector2>();
-            gm.Attack(attackDir);
+            List<TileBehaviour> tilesInAttackRange = gm.FindAttackTiles(attackDir);
+            if (tilesInAttackRange.Count <= 0) {
+                print("There're no tiles that way goofy");
+            } else {
+                foreach (TileBehaviour tile in tilesInAttackRange) {
+                    tile.FlashGreen();
+                    if (tile.objectOnTile != null && tile.objectOnTile.TryGetComponent<EnemyTakeDamage>(out EnemyTakeDamage enemy)) {
+                        enemy.TakeDamage();
+                    }
+                }
+                gm.EndTurn();
+            }
         }
     }
 
@@ -86,28 +97,28 @@ public class PlayerBehaviour : GridMovement
             if (moveDir.x > 0)
             {
                 if (withinTurnsMoveLimit(moveDir)) {
-                    MovePlayer(Vector3.right, "Right");
+                    Move(Vector3.right);
                 }   
             }
             else if (moveDir.x < 0)
             {
                 if (withinTurnsMoveLimit(moveDir))
                 {
-                    MovePlayer(Vector3.left, "Left");
+                    Move(Vector3.left);
                 }
             }
             else if (moveDir.y > 0)
             {
                 if (withinTurnsMoveLimit(moveDir))
                 {
-                    MovePlayer(Vector3.forward, "Up");
+                    Move(Vector3.forward);
                 }
             }
             else if (moveDir.y < 0)
             {
                 if (withinTurnsMoveLimit(moveDir))
                 {
-                    MovePlayer(Vector3.back, "Down");
+                    Move(Vector3.back);
                 }
             }
         }
@@ -119,7 +130,7 @@ public class PlayerBehaviour : GridMovement
         int tilesMovedY = Mathf.Abs(((int)gm.playerTile.gridLocation.y + (int)moveDir.y) - (int)TurnOrginTile.y);
 
         if ((tilesMovedX + tilesMovedY) <= gm.moveLimit) {
-            print("You have moved " + (tilesMovedX + tilesMovedY) + " tiles");
+            //print("You have moved " + (tilesMovedX + tilesMovedY) + " tiles");
         } else {
             print("Tile is to far away to move to it");
         }
