@@ -15,7 +15,7 @@ public class GameManager : MonoBehaviour
     [SerializeField] private GameObject enemy;
     [SerializeField] private GameObject gridSpace;
     [SerializeField] public TileBehaviour playerTile;
-    [SerializeField] private List<TileBehaviour> EnemyTiles;
+    [SerializeField] public List<TileBehaviour> tilesWithEnemies;
     [SerializeField] private GameObject boulder;
 
     public bool playerTurn = true;
@@ -78,7 +78,16 @@ public class GameManager : MonoBehaviour
     }
     public void TrackEnemy(TileBehaviour tileScript)
     {
-        EnemyTiles.Add(tileScript);
+        tilesWithEnemies.Add(tileScript);
+    }
+    public void RemoveEnemy(GameObject enemy)
+    {
+        foreach (TileBehaviour tile in tilesWithEnemies) {
+            if (tile.objectOnTile == enemy) {
+                tilesWithEnemies.Remove(tile);
+                break;
+            }
+        }
     }
     public void Attack(Vector2 attackDir) {
         playerTurn = false;
@@ -132,8 +141,10 @@ public class GameManager : MonoBehaviour
     }
 
     public void DoEnemyTurn() {
-        
-        //add code
+
+        foreach (TileBehaviour tile in tilesWithEnemies) {
+            tile.objectOnTile.GetComponent<EnemyMovement>().MoveTowardsPlayer();
+        }
 
         //switching back to player turn
         print("Enemies have played");

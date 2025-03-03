@@ -29,7 +29,7 @@ public class TileBehaviour : MonoBehaviour
         if (collision.gameObject.GetComponent<EnemyTakeDamage>())
         {
             collision.transform.SetParent(gameObject.transform);
-            gm.TrackEnemy(GetComponent<TileBehaviour>());
+            gm.tilesWithEnemies.Add(GetComponent<TileBehaviour>());
         }
     }
     private void OnCollisionExit(Collision collision)
