@@ -35,7 +35,7 @@ public class Hazard : MonoBehaviour
         if(other.tag == "Enemy")
         {
             //Deal damage
-            other.GetComponent<EnemyTakeDamage>.TakeDamage(damage);
+            other.gameObject.GetComponent<EnemyTakeDamage>().TakeDamage(damage);
         }
     }
 }
