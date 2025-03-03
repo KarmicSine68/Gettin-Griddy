@@ -21,7 +21,7 @@ public class GameManager : MonoBehaviour
     public bool playerTurn = true;
     public int moveLimit = 3;
 
-    TileBehaviour[,] grid;
+    public TileBehaviour[,] grid;
 
     [Header("Grid Parameters")]
     [Tooltip("How many rows are in the grid")]
@@ -143,7 +143,10 @@ public class GameManager : MonoBehaviour
     public void DoEnemyTurn() {
 
         foreach (TileBehaviour tile in tilesWithEnemies) {
-            tile.objectOnTile.GetComponent<EnemyMovement>().MoveTowardsPlayer();
+            if (tile.objectOnTile.TryGetComponent<EnemyMovement>(out EnemyMovement enemy)) {
+                enemy.MoveTowardsPlayer();
+            }
+            //if () { }
         }
 
         //switching back to player turn
