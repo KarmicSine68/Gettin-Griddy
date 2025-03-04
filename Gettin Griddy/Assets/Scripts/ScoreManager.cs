@@ -19,12 +19,12 @@ public class ScoreManager : MonoBehaviour
 
     public void IncreaseScore() {
         score++;
-        scoreText.text = "Score: " + score;
+        scoreText.text = "Score: " + score + "/" + targetScore;
         CheckWin();
     }
     public void IncreaseScore(int amount) {
         score += amount;
-        scoreText.text = "Score: " + score;
+        scoreText.text = "Score: " + score + "/" + targetScore;
         CheckWin();
     }
     private void CheckWin() {

@@ -193,7 +193,7 @@ MonoBehaviour:
     m_HorizontalOverflow: 0
     m_VerticalOverflow: 0
     m_LineSpacing: 1
-  m_Text: 'Score: 0'
+  m_Text: 'Score: 0/15'
 --- !u!222 &155811678
 CanvasRenderer:
   m_ObjectHideFlags: 0
@@ -273,7 +273,7 @@ MonoBehaviour:
     m_HorizontalOverflow: 0
     m_VerticalOverflow: 0
     m_LineSpacing: 1
-  m_Text: 'Lives: 5'
+  m_Text: 'Lives: 2'
 --- !u!222 &269422008
 CanvasRenderer:
   m_ObjectHideFlags: 0
@@ -311,7 +311,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 2ffba898322a60848a6b1db5c79d68d7, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  lives: 50
+  lives: 2
   loseScene: LoseScene
   LivesText: {fileID: 269422007}
 --- !u!4 &502793655
@@ -591,7 +591,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   score: 0
-  targetScore: 5
+  targetScore: 15
   winScene: WinScene
   scoreText: {fileID: 155811677}
 --- !u!1 &1121946165
@@ -632,7 +632,8 @@ MonoBehaviour:
   enemyTag: Enemy
   worldHazards: []
   hazardTag: Hazard
-  enemiesToSpawn: 5
+  enemiesToSpawn: 15
+  bouldersToSpawn: 5
   playerTurn: 1
   worldTurn: 0
   enemyTurn: 0

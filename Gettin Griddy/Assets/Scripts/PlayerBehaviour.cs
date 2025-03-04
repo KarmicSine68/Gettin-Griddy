@@ -50,6 +50,7 @@ public class PlayerBehaviour : GridMovement
     private void EndTurn(InputAction.CallbackContext obj)
     {
         gm.playerTile = GetTile();
+        GetComponent<Renderer>().material.color = Color.green;
         gm.EndTurn();
     }
 
