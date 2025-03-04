@@ -60,7 +60,7 @@ public class GameManager : MonoBehaviour
             Spawn(enemy);
         }
         enemies = GameObject.FindGameObjectsWithTag(enemyTag);
-        worldHazards = GameObject.FindGameObjectsWithTag(hazardTag);
+        //worldHazards = GameObject.FindGameObjectsWithTag(hazardTag);
 
         StartCoroutine(GameLoop()); // Start the turn system
     }
@@ -164,7 +164,7 @@ public class GameManager : MonoBehaviour
         {
             yield return StartCoroutine(PlayerTurn());
             yield return StartCoroutine(EnemyTurn());
-            yield return StartCoroutine(WorldTurn());
+            //yield return StartCoroutine(WorldTurn());
         }
 
         Debug.Log("Battle has ended.");

@@ -34,7 +34,6 @@ public class TileBehaviour : MonoBehaviour
     }
     private void OnCollisionExit(Collision collision)
     {
-        
         if (collision.gameObject.GetComponent<EnemyTakeDamage>()) {
             print(collision.gameObject);
             gm.RemoveEnemy(gameObject.GetComponent<TileBehaviour>().objectOnTile);
