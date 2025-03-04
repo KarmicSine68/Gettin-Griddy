@@ -15,8 +15,13 @@ public class GameManager : MonoBehaviour
     [SerializeField] private GameObject enemy;
     [SerializeField] private GameObject gridSpace;
     [SerializeField] public TileBehaviour playerTile;
-    [SerializeField] public List<TileBehaviour> EnemyTiles;
+    [SerializeField] private List<TileBehaviour> EnemyTiles;
     [SerializeField] private GameObject boulder;
+    
+    [SerializeField] private GameObject[] enemies;
+    [SerializeField] private string enemyTag = "Enemy";
+    [SerializeField] private GameObject[] worldHazards;
+    [SerializeField] private string hazardTag = "Hazard";
 
     public bool playerTurn = true;
     public int moveLimit = 3;
@@ -28,12 +33,16 @@ public class GameManager : MonoBehaviour
     [SerializeField] private int rows;
     [Tooltip("How many columns are in the grid")]
     [SerializeField] private int columns;
+    private bool PlayedTurn = false;
+    private bool isBattleActive = true; // Battle control flag
 
+    [SerializeField] private int TurnState = 1;
     /// <summary>
     /// Creates the grid and spwans things in
     /// </summary>
     private void Start()
     {
+
         grid = new TileBehaviour[columns, rows];
         for(int i = 0; i < rows; ++i)
         {
@@ -47,9 +56,13 @@ public class GameManager : MonoBehaviour
         }
         Spawn(player);
         Spawn(boulder);
-        for (int i = 0; i < 10; i++) {
+        for (int i = 0; i < 1; i++) {
             Spawn(enemy);
-        } 
+        }
+        enemies = GameObject.FindGameObjectsWithTag(enemyTag);
+        worldHazards = GameObject.FindGameObjectsWithTag(hazardTag);
+
+        StartCoroutine(GameLoop()); // Start the turn system
     }
     /// <summary>
     /// spawn a game object on a random unoccupied tile
@@ -69,17 +82,13 @@ public class GameManager : MonoBehaviour
         Instantiate(obj, spawnPos, Quaternion.identity);
     }
     public void EndTurn() {
-        if (playerTurn)
+        if (PlayedTurn)
         {
-            PlayerBehaviour player = playerTile.objectOnTile.GetComponent<PlayerBehaviour>();
-            player.TurnOrginTile = playerTile.gridLocation;
-            player.attacking = false;
-            playerTurn = false;
-            DoEnemyTurn();
+            PlayedTurn = false;
         }
-        else {
-            playerTurn = true;
-        }
+        /*else {
+            PlayedTurn = true;
+        }*/
     }
     /// <summary>
     /// Updates where in the grid the player is
@@ -93,8 +102,14 @@ public class GameManager : MonoBehaviour
     {
         EnemyTiles.Add(tileScript);
     }
-    public void RemoveEnemy(TileBehaviour enemy) {
-        EnemyTiles.Remove(enemy);
+    public void RemoveEnemy(GameObject enemy) {
+        print("called");
+        foreach (TileBehaviour tile in EnemyTiles) {
+            if (tile.objectOnTile == enemy) {
+                EnemyTiles.Remove(tile);
+                break;
+            }
+        }
     }
     public List<TileBehaviour> FindAttackTiles(Vector2 attackDir) {
         List<TileBehaviour> tilesToAttack = new List<TileBehaviour>();
@@ -128,16 +143,106 @@ public class GameManager : MonoBehaviour
         return tilesToAttack;  
     }
 
-    public void DoEnemyTurn() { 
-        for(int i = EnemyTiles.Count; i > 0; i--) {
-            EnemyTiles[i - 1].objectOnTile.GetComponent<EnemyMovement>().DoEnemyMovement();
-        }
+    /*public void DoEnemyTurn() {
+        print("Enemies have played");
         EndTurn();
-    }
+    }*/
     private bool gridHasPosition(Vector2 pos) {
         if (pos.x < 0 || pos.x >= rows || pos.y < 0 || pos.y >= columns) {
             return false;
         }
         return true;
+    }
+
+    /// <summary>
+    /// Main turn loop that runs sequentially.
+    /// Ends when the battle is no longer active.
+    /// </summary>
+    private IEnumerator GameLoop()
+    {
+        while (isBattleActive) // Run while battle is active
+        {
+            yield return StartCoroutine(PlayerTurn());
+            yield return StartCoroutine(EnemyTurn());
+            yield return StartCoroutine(WorldTurn());
+        }
+
+        Debug.Log("Battle has ended.");
+        OnBattleEnd(); // Call any post-battle logic
+    }
+    /// <summary>
+    /// Ends the battle and stops the game loop.
+    /// </summary>
+    public void EndBattle()
+    {
+        isBattleActive = false;
+    }
+
+    /// <summary>
+    /// Handles any post-battle logic (e.g., rewards, returning to menu).
+    /// </summary>
+    private void OnBattleEnd()
+    {
+        Debug.Log("Battle Over! Returning to menu or next scene...");
+        // Add transition logic here (e.g., load scene, show UI)
+    }
+    private IEnumerator PlayerTurn()
+    {
+        Debug.Log("Player's Turn");
+        PlayerBehaviour player = playerTile.objectOnTile.GetComponent<PlayerBehaviour>();
+        player.TurnOrginTile = playerTile.gridLocation;
+        player.attacking = false;
+        playerTurn = false;
+        yield return new WaitUntil(() => PlayedTurn);
+
+        TurnState = 2;
+    }
+
+    private IEnumerator EnemyTurn()
+    {
+        Debug.Log("Enemy's Turn");
+        enemies = GameObject.FindGameObjectsWithTag(enemyTag);
+        PlayedTurn = false;
+
+        foreach (GameObject obj in enemies)
+        {
+            EnemyMovement enemyMoveScript = obj.GetComponent<EnemyMovement>();
+            if (enemyMoveScript != null)
+            {
+                yield return StartCoroutine(enemyMoveScript.DoEnemyMovement());
+            }
+        }
+
+        PlayedTurn = true;
+        yield return new WaitUntil(() => PlayedTurn);
+
+        TurnState = 3;
+
+        // Check if all enemies are defeated
+        if (GameObject.FindGameObjectsWithTag(enemyTag).Length == 0)
+        {
+            EndBattle();
+        }
+    }
+
+    private IEnumerator WorldTurn()
+    {
+        Debug.Log("World's Turn");
+        worldHazards = GameObject.FindGameObjectsWithTag(hazardTag);
+        PlayedTurn = false;
+
+        foreach (GameObject obj in worldHazards)
+        {
+            Hazard hazardScript = obj.GetComponent<Hazard>();
+            if (hazardScript != null)
+            {
+                hazardScript.TickDownTimer();
+            }
+        } 
+
+        PlayedTurn = true;
+        yield return new WaitUntil(() => PlayedTurn);
+
+        TurnState = 1;
     }
 }
