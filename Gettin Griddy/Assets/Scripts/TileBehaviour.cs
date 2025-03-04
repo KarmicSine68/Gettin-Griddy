@@ -57,12 +57,12 @@ public class TileBehaviour : MonoBehaviour
     {
         return GetNeighbor(dir) != null;
     }
-    public void FlashGreen() {
-        StartCoroutine(Flash());
+    public void FlashColor(Color c) {
+        StartCoroutine(Flash(c));
     }
-    private IEnumerator Flash()
+    private IEnumerator Flash(Color c)
     {
-        GetComponent<Renderer>().material.color = Color.green;
+        GetComponent<Renderer>().material.color = c;
         yield return new WaitForSeconds(0.25f);
         GetComponent<Renderer>().material.color = Color.white;
     }
