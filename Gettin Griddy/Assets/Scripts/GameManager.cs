@@ -81,15 +81,15 @@ public class GameManager : MonoBehaviour
         spawnPos += new Vector3(.5f, 1.5f, .5f);
         Instantiate(obj, spawnPos, Quaternion.identity);
     }
-    /*public void EndTurn() {
+    public void EndTurn() {
         if (PlayedTurn)
         {
             PlayedTurn = false;
         }
-        else {
+        /*else {
             PlayedTurn = true;
-        }
-    }*/
+        }*/
+    }
     /// <summary>
     /// Updates where in the grid the player is
     /// </summary>
@@ -238,7 +238,7 @@ public class GameManager : MonoBehaviour
             {
                 hazardScript.TickDownTimer();
             }
-        }
+        } 
 
         PlayedTurn = true;
         yield return new WaitUntil(() => PlayedTurn);
