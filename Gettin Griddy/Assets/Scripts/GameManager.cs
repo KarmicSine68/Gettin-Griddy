@@ -24,6 +24,8 @@ public class GameManager : MonoBehaviour
     [SerializeField] private string hazardTag = "Hazard";
 
     public int enemiesToSpawn = 2;
+    public int bouldersToSpawn = 5;
+
     public bool playerTurn = true;
     public bool worldTurn = false;
     public bool enemyTurn = false;
@@ -58,6 +60,10 @@ public class GameManager : MonoBehaviour
             }
         }
         Spawn(player);
+        for (int i = 0; i < bouldersToSpawn; i++)
+        {
+            Spawn(boulder);
+        }
         Spawn(boulder);
         for (int i = 0; i < enemiesToSpawn; i++) {
             Spawn(enemy);

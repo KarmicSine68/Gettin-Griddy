@@ -80,6 +80,7 @@ public class PlayerBehaviour : GridMovement
                     }
                 }
                 gm.playerTile = GetTile();
+                GetComponent<Renderer>().material.color = Color.green;
                 gm.EndTurn();  
             }
         }
@@ -88,6 +89,11 @@ public class PlayerBehaviour : GridMovement
     private void ToggleAttackMode(InputAction.CallbackContext obj)
     {
         attacking = !attacking;
+        if (attacking) {
+            GetComponent<Renderer>().material.color = Color.red;
+        } else {
+            GetComponent<Renderer>().material.color = Color.green;
+        }
     }
     /// <summary>
     /// Reads input from the player and moves them
