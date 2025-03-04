@@ -15,10 +15,10 @@ public class GameManager : MonoBehaviour
     [SerializeField] private GameObject enemy;
     [SerializeField] private GameObject gridSpace;
     [SerializeField] public TileBehaviour playerTile;
-    [SerializeField] private List<TileBehaviour> EnemyTiles;
+    [SerializeField] public List<TileBehaviour> EnemyTiles;
     [SerializeField] private GameObject boulder;
     
-    [SerializeField] private GameObject[] enemies;
+
     [SerializeField] private string enemyTag = "Enemy";
     [SerializeField] private GameObject[] worldHazards;
     [SerializeField] private string hazardTag = "Hazard";
@@ -58,16 +58,13 @@ public class GameManager : MonoBehaviour
             }
         }
         Spawn(player);
-        //Spawn(boulder);
+        Spawn(boulder);
         for (int i = 0; i < enemiesToSpawn; i++) {
             Spawn(enemy);
         }
-        enemies = GameObject.FindGameObjectsWithTag(enemyTag);
-        //worldHazards = GameObject.FindGameObjectsWithTag(hazardTag);
-
-        //StartCoroutine(GameLoop()); // Start the turn system
+        
     }
-    private void Update()
+    private void FixedUpdate()
     {
         if (playerTurn)
         {
@@ -81,7 +78,8 @@ public class GameManager : MonoBehaviour
         {
             WorldTurn();
         }
-        else {
+        else
+        {
             print("how is it no ones turn? wtf dude");
         }
     }
@@ -93,14 +91,13 @@ public class GameManager : MonoBehaviour
     private void Spawn(GameObject obj) {
         int x = Random.Range(0, columns);
         int y = Random.Range(0, rows);
-        while (grid[x,y].hasObject) {
+        while (grid[x,y].objectOnTile != null) {
             x = Random.Range(0, columns);
             y = Random.Range(0, rows);
         }
-        grid[x, y].hasObject = true;
         Vector3 spawnPos = grid[x, y].transform.position;
         spawnPos += new Vector3(.5f, 1.5f, .5f);
-        Instantiate(obj, spawnPos, Quaternion.identity);
+        grid[x, y].objectOnTile = Instantiate(obj, spawnPos, Quaternion.identity);
     }
     public void EndTurn() {
         if (playerTurn)
@@ -135,7 +132,7 @@ public class GameManager : MonoBehaviour
         EnemyTiles.Add(tileScript);
     }
     public void RemoveEnemy(GameObject enemy) {
-        print("called");
+        //print("called");
         foreach (TileBehaviour tile in EnemyTiles) {
             if (tile.objectOnTile == enemy) {
                 EnemyTiles.Remove(tile);
@@ -206,23 +203,31 @@ public class GameManager : MonoBehaviour
     {
         TurnState = 1;
     }
-
-    private void EnemyTurn()
-    {
-        Debug.Log("Enemy's Turn");
-        enemies = GameObject.FindGameObjectsWithTag(enemyTag);
-        //PlayedTurn = false;
-
-        foreach (GameObject obj in enemies)
-        {
-            EnemyMovement enemyMoveScript = obj.GetComponent<EnemyMovement>();
-            EnemyAttack enemyAttackScript = obj.GetComponent<EnemyAttack>();
-            if (enemyMoveScript != null)
-            {
-                enemyMoveScript.DoEnemyMovement();
-                enemyAttackScript.TryToAttack();
+    public void HighlightMoveRange() {
+        foreach (TileBehaviour tile in grid) {
+            int tilesAwayX = Mathf.Abs((int)tile.gridLocation.x - (int)playerTile.objectOnTile.GetComponent<PlayerBehaviour>().TurnOrginTile.x);
+            int tilesAwayY = Mathf.Abs((int)tile.gridLocation.y - (int)playerTile.objectOnTile.GetComponent<PlayerBehaviour>().TurnOrginTile.y);
+            if ((tilesAwayX + tilesAwayY) <= 3) {
+                tile.FlashColor(Color.gray);
             }
         }
+    }
+    private void EnemyTurn()
+    {
+        //Debug.Log("Enemy's Turn");
+        EnemyMovement[] moveScripts = GameObject.FindObjectsOfType<EnemyMovement>();
+        foreach (EnemyMovement enemyScript in moveScripts)
+        {
+            enemyScript.DoEnemyMovement();
+        }
+
+        EnemyAttack[] attackScripts = GameObject.FindObjectsOfType<EnemyAttack>();
+        foreach (EnemyAttack enemyScript in attackScripts)
+        {
+            print(enemyScript.gameObject.name + " attacked");
+            enemyScript.TryToAttack();
+        }
+
         EndTurn();
         TurnState = 2;
 
@@ -235,10 +240,8 @@ public class GameManager : MonoBehaviour
 
     private void WorldTurn()
     {
-        Debug.Log("World's Turn");
+        //Debug.Log("World's Turn");
         //worldHazards = GameObject.FindGameObjectsWithTag(hazardTag);
-        //PlayedTurn = false;
-
         /*foreach (GameObject obj in worldHazards)
         {
             Hazard hazardScript = obj.GetComponent<Hazard>();
@@ -251,7 +254,8 @@ public class GameManager : MonoBehaviour
         PlayerBehaviour player = playerTile.objectOnTile.GetComponent<PlayerBehaviour>();
         player.TurnOrginTile = playerTile.gridLocation;
         player.attacking = false;
-        
         TurnState = 3;
     }
 }
+
+

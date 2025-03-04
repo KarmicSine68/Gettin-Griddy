@@ -11,14 +11,13 @@ using UnityEngine;
 public class TileBehaviour : MonoBehaviour
 {
     public Vector2 gridLocation;
-    public bool hasObject;
     public GameObject objectOnTile;
     private GameManager gm;
     private void Awake()
     {
         gm = FindObjectOfType<GameManager>();
     }
-    private void OnCollisionEnter(Collision collision)
+    /*private void OnCollisionEnter(Collision collision)
     {
         objectOnTile = collision.gameObject;
         if(objectOnTile.GetComponent<PlayerBehaviour>())
@@ -39,6 +38,9 @@ public class TileBehaviour : MonoBehaviour
             gm.RemoveEnemy(gameObject.GetComponent<TileBehaviour>().objectOnTile);
         }
         objectOnTile = null;
+    }*/
+    public void SetObjectOnTile(GameObject obj) {
+        objectOnTile = obj;
     }
     public TileBehaviour GetNeighbor(Vector3 dir) {
         Vector3 rayOrgin = transform.position;
@@ -53,6 +55,9 @@ public class TileBehaviour : MonoBehaviour
         }
         return null;
     }
+    public void SetColor(Color c) {
+        GetComponent<Renderer>().material.color = c;
+    }
     public bool HasNeighbor(Vector3 dir)
     {
         return GetNeighbor(dir) != null;
@@ -62,8 +67,20 @@ public class TileBehaviour : MonoBehaviour
     }
     private IEnumerator Flash(Color c)
     {
-        GetComponent<Renderer>().material.color = c;
+        Renderer renderer = GetComponent<Renderer>();
+        Material material = renderer.material;
+        Color startColor = material.color;
+        float duration = 0.25f;
+        float elapsedTime = 0f;
+        material.color = c;
         yield return new WaitForSeconds(0.25f);
-        GetComponent<Renderer>().material.color = Color.white;
+        elapsedTime = 0f;
+        while (elapsedTime < duration)
+        {
+            material.color = Color.Lerp(c, Color.white, elapsedTime / duration);
+            elapsedTime += Time.deltaTime;
+            yield return null;
+        }
+        material.color = Color.white;
     }
 }

@@ -672,7 +672,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 078c0a9712082c64a98943236b3b84e8, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  mainMenuScene: MainMenu
+  mainMenuScene: MainMenuScene
   sceneToLoad: MovementTesting
 --- !u!114 &1511231070
 MonoBehaviour:

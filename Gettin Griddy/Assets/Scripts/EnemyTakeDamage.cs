@@ -27,10 +27,20 @@ public class EnemyTakeDamage : MonoBehaviour
     public void TakeDamage(int amount)
     {
         health -= amount;
+        if (health <= 0)
+        {
+            Die();
+        }
+        else
+        {
+            print("EnemyHealth: " + health);
+        }
     }
     private void Die() {
-        FindObjectOfType<ScoreManager>().IncreaseScore();
         gm.RemoveEnemy(gameObject);
+        print("removed enemy");
+        FindObjectOfType<ScoreManager>().IncreaseScore();
+
         Destroy(gameObject);
     }
 }

@@ -41,17 +41,19 @@ public class PlayerBehaviour : GridMovement
         playerAttackToggle.started += ToggleAttackMode;
         endTurn.started += EndTurn;
 
-        FindStartTile();
-        TurnOrginTile = gm.playerTile.gridLocation;
+        gm.playerTile = GetTile();
+        GetTile().SetObjectOnTile(gameObject);
+        TurnOrginTile = GetTile().gridLocation;
         
     }
 
     private void EndTurn(InputAction.CallbackContext obj)
     {
+        gm.playerTile = GetTile();
         gm.EndTurn();
     }
 
-    private void FindStartTile() {
+    /*private void FindStartTile() {
         float rayDistance = 2f;
         RaycastHit[] hits = Physics.RaycastAll(transform.position, Vector3.down, rayDistance);
         foreach (RaycastHit hit in hits)
@@ -61,7 +63,7 @@ public class PlayerBehaviour : GridMovement
                 gm.TrackPlayer(tile);
             }
         } 
-    }
+    }*/
 
     private void PlayerAttack(InputAction.CallbackContext obj)
     {
@@ -77,7 +79,8 @@ public class PlayerBehaviour : GridMovement
                         enemy.TakeDamage();
                     }
                 }
-                gm.EndTurn();
+                gm.playerTile = GetTile();
+                gm.EndTurn();  
             }
         }
     }
@@ -86,7 +89,6 @@ public class PlayerBehaviour : GridMovement
     {
         attacking = !attacking;
     }
-
     /// <summary>
     /// Reads input from the player and moves them
     /// </summary>
@@ -98,42 +100,54 @@ public class PlayerBehaviour : GridMovement
             if (moveDir.x > 0)
             {
                 if (withinTurnsMoveLimit(moveDir)) {
+                    GetTile().objectOnTile = null;
                     Move(Vector3.right);
+                    GetTile().objectOnTile = gameObject;
+                    gm.playerTile = GetTile();
                 }   
             }
             else if (moveDir.x < 0)
             {
                 if (withinTurnsMoveLimit(moveDir))
                 {
+                    GetTile().objectOnTile = null;
                     Move(Vector3.left);
+                    GetTile().objectOnTile = gameObject;
+                    gm.playerTile = GetTile();
                 }
             }
             else if (moveDir.y > 0)
             {
                 if (withinTurnsMoveLimit(moveDir))
                 {
+                    GetTile().objectOnTile = null;
                     Move(Vector3.forward);
+                    GetTile().objectOnTile = gameObject;
+                    gm.playerTile = GetTile();
                 }
             }
             else if (moveDir.y < 0)
             {
                 if (withinTurnsMoveLimit(moveDir))
                 {
+                    GetTile().objectOnTile = null;
                     Move(Vector3.back);
+                    GetTile().objectOnTile = gameObject;
+                    gm.playerTile = GetTile();
                 }
-            }
+            } 
         }
     }
 
     private bool withinTurnsMoveLimit(Vector2 moveDir)
     {
-        int tilesMovedX = Mathf.Abs(((int)gm.playerTile.gridLocation.x + (int)moveDir.x) - (int)TurnOrginTile.x);
-        int tilesMovedY = Mathf.Abs(((int)gm.playerTile.gridLocation.y + (int)moveDir.y) - (int)TurnOrginTile.y);
+        int tilesMovedX = Mathf.Abs(((int)GetTile().gridLocation.x + (int)moveDir.x) - (int)TurnOrginTile.x);
+        int tilesMovedY = Mathf.Abs(((int)GetTile().gridLocation.y + (int)moveDir.y) - (int)TurnOrginTile.y);
 
         if ((tilesMovedX + tilesMovedY) <= gm.moveLimit) {
             //print("You have moved " + (tilesMovedX + tilesMovedY) + " tiles");
         } else {
-            print("Tile is to far away to move to it");
+            gm.HighlightMoveRange();
         }
 
         if ((tilesMovedX + tilesMovedY) <= gm.moveLimit)

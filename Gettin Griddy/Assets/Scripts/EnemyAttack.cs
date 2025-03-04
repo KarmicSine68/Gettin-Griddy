@@ -14,11 +14,6 @@ public class EnemyAttack : MonoBehaviour
         TileBehaviour currentTile = GetTile();
         TileBehaviour playerTile = gm.playerTile;
         LivesManager lm = GameObject.FindObjectOfType<LivesManager>();
-        print(currentTile.GetNeighbor(Vector3.forward));
-        print(currentTile.GetNeighbor(Vector3.back));
-        print(currentTile.GetNeighbor(Vector3.left));
-        print(currentTile.GetNeighbor(Vector3.right));
-
         if (currentTile.GetNeighbor(Vector3.forward) == playerTile) 
         {
             currentTile.GetNeighbor(Vector3.forward).FlashColor(Color.red);

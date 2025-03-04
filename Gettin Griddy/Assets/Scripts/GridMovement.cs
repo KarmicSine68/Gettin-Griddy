@@ -10,29 +10,16 @@ using UnityEngine;
 
 public class GridMovement : MonoBehaviour
 {
-    //The tile the player is on
-    public TileBehaviour currentTile;
-
-    private void Awake()
-    {
-        currentTile = GetTile();
-    }
 
     //moves the player to a new space
     protected bool Move(Vector3 dir)
     {
-        if(currentTile == null)
-        {
-            currentTile = GetTile();
-        }
         if(HasTile(dir) && TileIsEmpty(dir))
         {
             Vector3 newPos = transform.position;
             newPos.x += dir.x;
             newPos.z += dir.z;
             transform.position = newPos;
-            currentTile.hasObject = false;
-            currentTile = GetTile();
             return true;
         }
         return false;
@@ -41,11 +28,11 @@ public class GridMovement : MonoBehaviour
     //figures out if a tile has a neighboring tile in that direction
     protected bool HasTile(Vector3 dir)
     {
-        return currentTile.HasNeighbor(dir);
+        return GetTile().HasNeighbor(dir);
     }
 
     //returns the script of the tile that the player is on
-    protected TileBehaviour GetTile()
+    public TileBehaviour GetTile()
     {
         float rayDistance = 2f;
         RaycastHit[] hits = Physics.RaycastAll(transform.position, Vector3.down, rayDistance);
@@ -56,12 +43,11 @@ public class GridMovement : MonoBehaviour
                 return tile;
             }
         }
-        print(gameObject.name + " could not find current tile");
         return null;
     }
     //tells you if the tile you are trying to move to is occupied or not
     protected bool TileIsEmpty(Vector3 dir)
     {
-        return !currentTile.GetNeighbor(dir).hasObject;
+        return GetTile().GetNeighbor(dir).objectOnTile == null;
     }
 }
