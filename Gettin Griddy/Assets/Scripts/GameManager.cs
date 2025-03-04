@@ -214,7 +214,7 @@ public class GameManager : MonoBehaviour
             int tilesAwayX = Mathf.Abs((int)tile.gridLocation.x - (int)playerTile.objectOnTile.GetComponent<PlayerBehaviour>().TurnOrginTile.x);
             int tilesAwayY = Mathf.Abs((int)tile.gridLocation.y - (int)playerTile.objectOnTile.GetComponent<PlayerBehaviour>().TurnOrginTile.y);
             if ((tilesAwayX + tilesAwayY) <= 3) {
-                tile.FlashColor(Color.gray);
+                tile.FlashColor(Color.cyan);
             }
         }
     }

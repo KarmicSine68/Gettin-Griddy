@@ -20,6 +20,7 @@ public class PlayerBehaviour : GridMovement
 
     private GameManager gm;
     public bool attacking = false;
+    public List<TileBehaviour> tilesToAttack;
     public Vector2 TurnOrginTile;
 
     /// <summary>
@@ -49,6 +50,13 @@ public class PlayerBehaviour : GridMovement
 
     private void EndTurn(InputAction.CallbackContext obj)
     {
+        foreach (TileBehaviour tile in tilesToAttack)
+        {
+            tile.SetColor(Color.white);
+            if (tile.objectOnTile != null && tile.objectOnTile.TryGetComponent<EnemyTakeDamage>(out EnemyTakeDamage enemy)) {
+                enemy.TakeDamage();
+            }
+        }
         gm.playerTile = GetTile();
         GetComponent<Renderer>().material.color = Color.green;
         gm.EndTurn();
@@ -70,19 +78,30 @@ public class PlayerBehaviour : GridMovement
     {
         if (attacking) {
             Vector2 attackDir = playerMove.ReadValue<Vector2>();
-            List<TileBehaviour> tilesInAttackRange = gm.FindAttackTiles(attackDir);
-            if (tilesInAttackRange.Count <= 0) {
+            if (tilesToAttack == null)
+            {
+                tilesToAttack = gm.FindAttackTiles(attackDir);
+            }
+            else {
+                foreach (TileBehaviour tile in tilesToAttack)
+                {
+                    tile.SetColor(Color.white);
+                }
+                tilesToAttack = gm.FindAttackTiles(attackDir);
+            }
+            
+            if (tilesToAttack.Count <= 0) {
                 print("There're no tiles that way goofy");
             } else {
-                foreach (TileBehaviour tile in tilesInAttackRange) {
-                    tile.FlashColor(Color.green);
-                    if (tile.objectOnTile != null && tile.objectOnTile.TryGetComponent<EnemyTakeDamage>(out EnemyTakeDamage enemy)) {
+                foreach (TileBehaviour tile in tilesToAttack) {
+                    tile.SetColor(Color.green);
+                    /*if (tile.objectOnTile != null && tile.objectOnTile.TryGetComponent<EnemyTakeDamage>(out EnemyTakeDamage enemy)) {
                         enemy.TakeDamage();
-                    }
+                    }*/
                 }
-                gm.playerTile = GetTile();
-                GetComponent<Renderer>().material.color = Color.green;
-                gm.EndTurn();  
+               // gm.playerTile = GetTile();
+               // GetComponent<Renderer>().material.color = Color.green;
+                //gm.EndTurn();  
             }
         }
     }
@@ -93,6 +112,14 @@ public class PlayerBehaviour : GridMovement
         if (attacking) {
             GetComponent<Renderer>().material.color = Color.red;
         } else {
+            if (tilesToAttack != null)
+            {
+                foreach (TileBehaviour tile in tilesToAttack)
+                {
+                    tile.SetColor(Color.white);
+                }
+                tilesToAttack = null;
+            }
             GetComponent<Renderer>().material.color = Color.green;
         }
     }
