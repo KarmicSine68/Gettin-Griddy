@@ -24,6 +24,8 @@ public class GameManager : MonoBehaviour
     [SerializeField] private string hazardTag = "Hazard";
 
     public bool playerTurn = true;
+    public bool worldTurn = false;
+    public bool enemyTurn = false;
     public int moveLimit = 3;
 
     public TileBehaviour[,] grid;
@@ -33,7 +35,7 @@ public class GameManager : MonoBehaviour
     [SerializeField] private int rows;
     [Tooltip("How many columns are in the grid")]
     [SerializeField] private int columns;
-    private bool PlayedTurn = false;
+
     private bool isBattleActive = true; // Battle control flag
 
     [SerializeField] private int TurnState = 1;
@@ -82,13 +84,24 @@ public class GameManager : MonoBehaviour
         Instantiate(obj, spawnPos, Quaternion.identity);
     }
     public void EndTurn() {
-        if (PlayedTurn)
+        if (playerTurn)
         {
-            PlayedTurn = false;
+            enemyTurn = true;
+            playerTurn = false;
+            worldTurn = false;
         }
-        /*else {
-            PlayedTurn = true;
-        }*/
+        else if (enemyTurn)
+        {
+            enemyTurn = false;
+            playerTurn = false;
+            worldTurn = true;
+        }
+        else if (worldTurn)
+        {
+            enemyTurn = false;
+            playerTurn = true;
+            worldTurn = false;
+        }
     }
     /// <summary>
     /// Updates where in the grid the player is
@@ -164,7 +177,7 @@ public class GameManager : MonoBehaviour
         {
             yield return StartCoroutine(PlayerTurn());
             yield return StartCoroutine(EnemyTurn());
-            //yield return StartCoroutine(WorldTurn());
+            yield return StartCoroutine(WorldTurn());
         }
 
         Debug.Log("Battle has ended.");
@@ -192,8 +205,9 @@ public class GameManager : MonoBehaviour
         PlayerBehaviour player = playerTile.objectOnTile.GetComponent<PlayerBehaviour>();
         player.TurnOrginTile = playerTile.gridLocation;
         player.attacking = false;
-        playerTurn = false;
-        yield return new WaitUntil(() => PlayedTurn);
+        playerTurn = true;
+        EndTurn();
+        yield return new WaitUntil(() => enemyTurn);
 
         TurnState = 2;
     }
@@ -202,7 +216,7 @@ public class GameManager : MonoBehaviour
     {
         Debug.Log("Enemy's Turn");
         enemies = GameObject.FindGameObjectsWithTag(enemyTag);
-        PlayedTurn = false;
+        //PlayedTurn = false;
 
         foreach (GameObject obj in enemies)
         {
@@ -213,8 +227,9 @@ public class GameManager : MonoBehaviour
             }
         }
 
-        PlayedTurn = true;
-        yield return new WaitUntil(() => PlayedTurn);
+        //PlayedTurn = true;
+        EndTurn();
+        yield return new WaitUntil(() => worldTurn);
 
         TurnState = 3;
 
@@ -228,8 +243,8 @@ public class GameManager : MonoBehaviour
     private IEnumerator WorldTurn()
     {
         Debug.Log("World's Turn");
-        worldHazards = GameObject.FindGameObjectsWithTag(hazardTag);
-        PlayedTurn = false;
+        //worldHazards = GameObject.FindGameObjectsWithTag(hazardTag);
+        //PlayedTurn = false;
 
         foreach (GameObject obj in worldHazards)
         {
@@ -238,10 +253,11 @@ public class GameManager : MonoBehaviour
             {
                 hazardScript.TickDownTimer();
             }
-        } 
+        }
 
-        PlayedTurn = true;
-        yield return new WaitUntil(() => PlayedTurn);
+        //PlayedTurn = true;
+        EndTurn();
+        yield return new WaitUntil(() => playerTurn);
 
         TurnState = 1;
     }
