@@ -23,6 +23,7 @@ public class GameManager : MonoBehaviour
     [SerializeField] private GameObject[] worldHazards;
     [SerializeField] private string hazardTag = "Hazard";
 
+    public int enemiesToSpawn = 2;
     public bool playerTurn = true;
     public bool worldTurn = false;
     public bool enemyTurn = false;
@@ -57,8 +58,8 @@ public class GameManager : MonoBehaviour
             }
         }
         Spawn(player);
-        Spawn(boulder);
-        for (int i = 0; i < 1; i++) {
+        //Spawn(boulder);
+        for (int i = 0; i < enemiesToSpawn; i++) {
             Spawn(enemy);
         }
         enemies = GameObject.FindGameObjectsWithTag(enemyTag);
@@ -247,6 +248,10 @@ public class GameManager : MonoBehaviour
             }
         }*/
         EndTurn();
+        PlayerBehaviour player = playerTile.objectOnTile.GetComponent<PlayerBehaviour>();
+        player.TurnOrginTile = playerTile.gridLocation;
+        player.attacking = false;
+        
         TurnState = 3;
     }
 }

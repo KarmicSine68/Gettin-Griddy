@@ -15,8 +15,10 @@ public class EnemyMovement : GridMovement
         print(currentTile);
         int distanceX = (int)gm.playerTile.gridLocation.x - (int)currentTile.gridLocation.x;
         int distanceY = (int)gm.playerTile.gridLocation.y - (int)currentTile.gridLocation.y;
+
         bool canMoveX = true;
         bool canMoveY = true;
+
         if (distanceX == 0 || currentTile.GetNeighbor(new Vector3(Mathf.Sign(distanceX), 0, 0)).hasObject) {
             canMoveX = false;
         }
@@ -36,7 +38,7 @@ public class EnemyMovement : GridMovement
             }
             else
             {
-                Move(new Vector3(0, 0, Mathf.Sign(distanceX)));
+                Move(new Vector3(0, 0, Mathf.Sign(distanceY)));
             }
         }
         else if (canMoveX)
@@ -46,7 +48,7 @@ public class EnemyMovement : GridMovement
         }
         else if (canMoveY)
         {
-            Move(new Vector3(0, 0, Mathf.Sign(distanceX)));
+            Move(new Vector3(0, 0, Mathf.Sign(distanceY)));
             movesUsed++;
         }
     }

@@ -589,7 +589,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   score: 0
-  targetScore: 10
+  targetScore: 5
   winScene: WinScene
   scoreText: {fileID: 155811677}
 --- !u!1 &1121946165
@@ -627,10 +627,18 @@ MonoBehaviour:
   playerTile: {fileID: 0}
   EnemyTiles: []
   boulder: {fileID: 5252985174513615257, guid: 3141f814348a101489cfd3c74a992208, type: 3}
+  enemies: []
+  enemyTag: Enemy
+  worldHazards: []
+  hazardTag: Hazard
+  enemiesToSpawn: 5
   playerTurn: 1
+  worldTurn: 0
+  enemyTurn: 0
   moveLimit: 3
   rows: 9
   columns: 9
+  TurnState: 1
 --- !u!4 &1121946167
 Transform:
   m_ObjectHideFlags: 0
