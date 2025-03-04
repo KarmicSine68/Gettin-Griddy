@@ -17,7 +17,12 @@ public class MenuButtons : MonoBehaviour
     public void OnClickCredits()
     {
         SceneManager.LoadScene("Credits");
-    }    
+    }
+    
+    public void OnClickHowToPlay()
+    {
+        SceneManager.LoadScene("HowToPlay");
+    }
 
     public void OnClickQuit()
     {
