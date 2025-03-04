@@ -219,7 +219,7 @@ MonoBehaviour:
   m_text: "- There are two phases, Move Mode and Attack Mode.\n- You can move up
     to 3 tiles during Move Mode. \n- Pressing space ends Move Mode and enters Attack
     Mode.\n- Your attack is a 3 tile horizontal strip in front of the player.\n-
-    Pressing a direction during Attack Mode confirms your attack\n"
+    Pressing a direction during Attack Mode confirms your attack and ends your turn.\n"
   m_isRightToLeft: 0
   m_fontAsset: {fileID: 11400000, guid: 8f586378b4e144a9851e7b34d9b748ee, type: 2}
   m_sharedMaterial: {fileID: 2180264, guid: 8f586378b4e144a9851e7b34d9b748ee, type: 2}
@@ -282,7 +282,7 @@ MonoBehaviour:
   m_VertexBufferAutoSizeReduction: 0
   m_useMaxVisibleDescender: 1
   m_pageToDisplay: 1
-  m_margin: {x: -591.5624, y: 0, z: -163.82483, w: -212.82904}
+  m_margin: {x: -638.9844, y: 0, z: -163.82483, w: -212.82904}
   m_isUsingLegacyAnimationComponent: 0
   m_isVolumetricText: 0
   m_hasFontAssetChanged: 0
