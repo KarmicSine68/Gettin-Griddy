@@ -209,7 +209,7 @@ public class GameManager : MonoBehaviour
             EnemyMovement enemyMoveScript = obj.GetComponent<EnemyMovement>();
             if (enemyMoveScript != null)
             {
-                yield return StartCoroutine(enemyMoveScript.DoEnemyMovement());
+                enemyMoveScript.DoEnemyMovement();
             }
         }
 
