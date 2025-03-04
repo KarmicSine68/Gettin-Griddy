@@ -81,19 +81,15 @@ public class GameManager : MonoBehaviour
         spawnPos += new Vector3(.5f, 1.5f, .5f);
         Instantiate(obj, spawnPos, Quaternion.identity);
     }
-    public void EndTurn() {
-        if (playerTurn)
+    /*public void EndTurn() {
+        if (PlayedTurn)
         {
-            PlayerBehaviour player = playerTile.objectOnTile.GetComponent<PlayerBehaviour>();
-            player.TurnOrginTile = playerTile.gridLocation;
-            player.attacking = false;
-            playerTurn = false;
-            DoEnemyTurn();
+            PlayedTurn = false;
         }
         else {
-            playerTurn = true;
+            PlayedTurn = true;
         }
-    }
+    }*/
     /// <summary>
     /// Updates where in the grid the player is
     /// </summary>
@@ -147,10 +143,10 @@ public class GameManager : MonoBehaviour
         return tilesToAttack;  
     }
 
-    public void DoEnemyTurn() {
+    /*public void DoEnemyTurn() {
         print("Enemies have played");
         EndTurn();
-    }
+    }*/
     private bool gridHasPosition(Vector2 pos) {
         if (pos.x < 0 || pos.x >= rows || pos.y < 0 || pos.y >= columns) {
             return false;
@@ -193,8 +189,10 @@ public class GameManager : MonoBehaviour
     private IEnumerator PlayerTurn()
     {
         Debug.Log("Player's Turn");
-
-        PlayedTurn = false;
+        PlayerBehaviour player = playerTile.objectOnTile.GetComponent<PlayerBehaviour>();
+        player.TurnOrginTile = playerTile.gridLocation;
+        player.attacking = false;
+        playerTurn = false;
         yield return new WaitUntil(() => PlayedTurn);
 
         TurnState = 2;
