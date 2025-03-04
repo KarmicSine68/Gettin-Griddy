@@ -72,7 +72,7 @@ public class PlayerBehaviour : GridMovement
                 print("There're no tiles that way goofy");
             } else {
                 foreach (TileBehaviour tile in tilesInAttackRange) {
-                    tile.FlashGreen();
+                    tile.FlashColor(Color.green);
                     if (tile.objectOnTile != null && tile.objectOnTile.TryGetComponent<EnemyTakeDamage>(out EnemyTakeDamage enemy)) {
                         enemy.TakeDamage();
                     }
