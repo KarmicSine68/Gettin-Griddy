@@ -2,30 +2,58 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-public class EnemyMovement : MonoBehaviour
+public class EnemyMovement : GridMovement
 {
     private GameManager gm;
-    public int moveLimit = 2;
+    public int numOfMoves = 2;
+    private int movesUsed = 0;
     private void Start()
     {
-        gm = FindObjectOfType<GameManager>();
+        gm = GameObject.FindObjectOfType<GameManager>();
     }
-    //finds the next tile that the enemy should move to
-    public void MoveTowardsPlayer(Vector2 startingTile)
-    {
-        int DistanceToPlayerX = (int)gm.playerTile.gridLocation.x - (int)startingTile.x;
-        int DistanceToPlayerY = (int)gm.playerTile.gridLocation.y - (int)startingTile.y;
-        Vector2 newTileDirection;
-        if (Mathf.Abs(DistanceToPlayerX) > Mathf.Abs(DistanceToPlayerY))
+    public void DoEnemyMovement() {
+        print(currentTile);
+        int distanceX = (int)gm.playerTile.gridLocation.x - (int)currentTile.gridLocation.x;
+        int distanceY = (int)gm.playerTile.gridLocation.y - (int)currentTile.gridLocation.y;
+        bool canMoveX = true;
+        bool canMoveY = true;
+        if (distanceX == 0 || currentTile.GetNeighbor(new Vector3(Mathf.Sign(distanceX), 0, 0)).hasObject) {
+            canMoveX = false;
+        }
+        if (distanceY == 0 || currentTile.GetNeighbor(new Vector3(0, 0, Mathf.Sign(distanceY))).hasObject)
         {
-            newTileDirection = new Vector2(Mathf.Sign(DistanceToPlayerX), 0);
-        } else {
-            newTileDirection = new Vector2(0, Mathf.Sign(DistanceToPlayerY));
+            canMoveY = false;
         }
-        Vector2 newTile = new Vector2(startingTile.x + newTileDirection.x, startingTile.y + newTileDirection.y);
-        if (!gm.grid[(int)newTile.x, (int)newTile.y].hasObject) {
-            Vector3 newPos = new Vector3(gm.grid[(int)newTile.x, (int)newTile.y].gameObject.transform.position.x, 0, gm.grid[(int)newTile.x, (int)newTile.y].gameObject.transform.position.z);
-            gameObject.transform.position = newPos;
+
+        print("distance to player: " + distanceX + ", " + distanceY + "---" + canMoveX + canMoveY);
+        //choosing a direction to move in if it even can
+        if (canMoveX && canMoveY)
+        {
+            int r = Random.Range(0, 2);
+            if (r < 1)
+            {
+                Move(new Vector3(Mathf.Sign(distanceX), 0, 0));
+            }
+            else
+            {
+                Move(new Vector3(0, 0, Mathf.Sign(distanceX)));
+            }
         }
+        else if (canMoveX)
+        {
+            Move(new Vector3(Mathf.Sign(distanceX), 0, 0));
+            movesUsed++;
+        }
+        else if (canMoveY)
+        {
+            Move(new Vector3(0, 0, Mathf.Sign(distanceX)));
+            movesUsed++;
+        }
+    }
+    public bool HasUnusedMoves() {
+        if (movesUsed >= numOfMoves) {
+            return false;
+        }
+        return true;
     }
 }
