@@ -23,12 +23,12 @@ public class TileBehaviour : MonoBehaviour
         objectOnTile = collision.gameObject;
         if(collision.gameObject.GetComponent<PlayerBehaviour>())
         {
-            collision.transform.SetParent(gameObject.transform);
+            //collision.transform.SetParent(gameObject.transform);
             gm.TrackPlayer(GetComponent<TileBehaviour>());
         }
         if (collision.gameObject.GetComponent<EnemyTakeDamage>())
         {
-            collision.transform.SetParent(gameObject.transform);
+            //collision.transform.SetParent(gameObject.transform);
             gm.TrackEnemy(GetComponent<TileBehaviour>());
         }
     }
@@ -36,7 +36,24 @@ public class TileBehaviour : MonoBehaviour
     {
         objectOnTile = null;
     }
-    public void FlashRed() {
+    public TileBehaviour GetNeighbor(Vector3 dir) {
+        Vector3 rayOrgin = transform.position;
+        rayOrgin += new Vector3(0.5f, 0.5f, 0.5f);
+        RaycastHit[] hits = Physics.RaycastAll(rayOrgin, dir, 1);
+        foreach (RaycastHit hit in hits)
+        {
+            if (hit.collider.gameObject != gameObject && hit.collider.gameObject.TryGetComponent<TileBehaviour>(out TileBehaviour tile))
+            {
+                return tile;
+            }
+        }
+        return null;
+    }
+    public bool HasNeighbor(Vector3 dir)
+    {
+        return GetNeighbor(dir) != null;
+    }
+    public void FlashGreen() {
         StartCoroutine(Flash());
     }
     private IEnumerator Flash()

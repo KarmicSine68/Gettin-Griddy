@@ -11,77 +11,50 @@ using UnityEngine;
 public class GridMovement : MonoBehaviour
 {
     //The tile the player is on
-    [SerializeField] GameObject currentTile;
-
-    /// <summary>
-    /// Moves the player to a new space if elligible
-    /// </summary>
-    protected void MovePlayer(Vector3 dir, string moveDir)
+    protected TileBehaviour currentTile;
+    
+    //moves the player to a new space
+    protected void Move(Vector3 dir)
     {
         if(currentTile == null)
         {
-            GetTile();
+            currentTile = GetTile();
         }
-
-        if(isTile(dir) && CanMove(dir))
+        if(HasTile(dir) && TileIsEmpty(dir))
         {
             Vector3 newPos = transform.position;
-            switch(moveDir)
-            {
-                case "Up":
-                    newPos.z += currentTile.transform.localScale.x;
-                    //newPos.z += 1;
-                    break;
-                case "Down":
-                    newPos.z -= currentTile.transform.localScale.x;
-                    //newPos.z -= 1;
-                    break;
-                case "Right":
-                    newPos.x += currentTile.transform.localScale.x;
-                    //newPos.x += 1;
-                    break;
-                case "Left":
-                    newPos.x -= currentTile.transform.localScale.x;
-                    //newPos.x -= 1;
-                    break;
-                default:
-                    Debug.Log("Unknown direction");
-                    break;
-            }
-
+            newPos.x += dir.x;
+            newPos.z += dir.z;
             transform.position = newPos;
-
-            GetTile();
+            currentTile.hasObject = false;
+            currentTile = GetTile();
         }
     }
 
-    /// <summary>
-    /// Returns true if there is a tile in that direction
-    /// </summary>
-    /// <returns></returns>
-    protected bool isTile(Vector3 dir)
+    //figures out if a tile has a neighboring tile in that direction
+    protected bool HasTile(Vector3 dir)
     {
-        Vector3 rayOrigin = transform.position;
-        rayOrigin.y -= .5f;
-        return Physics.Raycast(rayOrigin, dir, currentTile.transform.localScale.x);
+        return currentTile.HasNeighbor(dir);
     }
 
-    /// <summary>
-    /// Gets the current cube the player is on
-    /// </summary>
-    protected void GetTile()
+    //returns the script of the tile that the player is on
+    protected TileBehaviour GetTile()
     {
-        currentTile = gameObject.GetComponentInParent<TileBehaviour>().gameObject;
+        float rayDistance = 2f;
+        RaycastHit[] hits = Physics.RaycastAll(transform.position, Vector3.down, rayDistance);
+        foreach (RaycastHit hit in hits)
+        {
+            if (hit.collider.gameObject.TryGetComponent<TileBehaviour>(out TileBehaviour tile))
+            {
+                return tile;
+            }
+        }
+        print(gameObject.name + " could not find current tile");
+        return null;
     }
-
-    protected bool CanMove(Vector3 dir)
+    //tells you if the tile you are trying to move to is occupied or not
+    protected bool TileIsEmpty(Vector3 dir)
     {
-        Vector3 rayOrigin = transform.position;
-        rayOrigin.y -= .5f;
-        RaycastHit hit;
-        Physics.Raycast(rayOrigin, dir, out hit, currentTile.transform.localScale.x);
-
-        TileBehaviour tile = hit.collider.gameObject.GetComponent<TileBehaviour>();
-        return (tile.objectOnTile == null);
+        return !currentTile.GetNeighbor(dir).hasObject;
     }
 }

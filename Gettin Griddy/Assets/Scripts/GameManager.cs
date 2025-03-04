@@ -21,7 +21,7 @@ public class GameManager : MonoBehaviour
     public bool playerTurn = true;
     public int moveLimit = 3;
 
-    TileBehaviour[,] grid;
+    public TileBehaviour[,] grid;
 
     [Header("Grid Parameters")]
     [Tooltip("How many rows are in the grid")]
@@ -47,7 +47,7 @@ public class GameManager : MonoBehaviour
         }
         Spawn(player);
         Spawn(boulder);
-        for (int i = 0; i < 10; i++) {
+        for (int i = 0; i < 1; i++) {
             Spawn(enemy);
         } 
     }
@@ -68,6 +68,19 @@ public class GameManager : MonoBehaviour
         spawnPos += new Vector3(.5f, 1.5f, .5f);
         Instantiate(obj, spawnPos, Quaternion.identity);
     }
+    public void EndTurn() {
+        if (playerTurn)
+        {
+            PlayerBehaviour player = playerTile.objectOnTile.GetComponent<PlayerBehaviour>();
+            player.TurnOrginTile = playerTile.gridLocation;
+            player.attacking = false;
+            playerTurn = false;
+            DoEnemyTurn();
+        }
+        else {
+            playerTurn = true;
+        }
+    }
     /// <summary>
     /// Updates where in the grid the player is
     /// </summary>
@@ -80,8 +93,16 @@ public class GameManager : MonoBehaviour
     {
         EnemyTiles.Add(tileScript);
     }
-    public void Attack(Vector2 attackDir) {
-        playerTurn = false;
+    public void RemoveEnemy(GameObject enemy) {
+        print("called");
+        foreach (TileBehaviour tile in EnemyTiles) {
+            if (tile.objectOnTile == enemy) {
+                EnemyTiles.Remove(tile);
+                break;
+            }
+        }
+    }
+    public List<TileBehaviour> FindAttackTiles(Vector2 attackDir) {
         List<TileBehaviour> tilesToAttack = new List<TileBehaviour>();
         Vector2 playerPos = playerTile.gridLocation;
 
@@ -110,37 +131,12 @@ public class GameManager : MonoBehaviour
                 tilesToAttack.Add(grid[(int)(playerPos.x + attackDir.x - 1), (int)(playerPos.y + attackDir.y)].GetComponent<TileBehaviour>());
             }
         }
-
-        //applying damage to enemies on the tiles it found
-        if (tilesToAttack.Count <= 0)
-        {
-            print("There're no tiles that way goofy");
-        } else {
-            foreach (TileBehaviour tile in tilesToAttack)
-            {
-                tile.FlashRed();
-                if (tile.objectOnTile != null && tile.objectOnTile.TryGetComponent<EnemyTakeDamage>(out EnemyTakeDamage enemy)) {
-                    enemy.TakeDamage();
-                }
-            }
-        }
-
-        //this is where you will call the function that does the enemy turn logic
-        DoEnemyTurn(); 
-
-        
+        return tilesToAttack;  
     }
 
     public void DoEnemyTurn() {
-        
-        //add code
-
-        //switching back to player turn
         print("Enemies have played");
-        PlayerBehaviour player = playerTile.objectOnTile.GetComponent<PlayerBehaviour>();
-        player.TurnOrginTile = playerTile.gridLocation;
-        player.attacking = false;
-        playerTurn = true;
+        EndTurn();
     }
     private bool gridHasPosition(Vector2 pos) {
         if (pos.x < 0 || pos.x >= rows || pos.y < 0 || pos.y >= columns) {
