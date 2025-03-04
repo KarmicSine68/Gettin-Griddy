@@ -64,7 +64,25 @@ public class GameManager : MonoBehaviour
         enemies = GameObject.FindGameObjectsWithTag(enemyTag);
         //worldHazards = GameObject.FindGameObjectsWithTag(hazardTag);
 
-        StartCoroutine(GameLoop()); // Start the turn system
+        //StartCoroutine(GameLoop()); // Start the turn system
+    }
+    private void Update()
+    {
+        if (playerTurn)
+        {
+            PlayerTurn();
+        }
+        else if (enemyTurn)
+        {
+            EnemyTurn();
+        }
+        else if (worldTurn)
+        {
+            WorldTurn();
+        }
+        else {
+            print("how is it no ones turn? wtf dude");
+        }
     }
     /// <summary>
     /// spawn a game object on a random unoccupied tile
@@ -168,22 +186,6 @@ public class GameManager : MonoBehaviour
     }
 
     /// <summary>
-    /// Main turn loop that runs sequentially.
-    /// Ends when the battle is no longer active.
-    /// </summary>
-    private IEnumerator GameLoop()
-    {
-        while (isBattleActive) // Run while battle is active
-        {
-            yield return StartCoroutine(PlayerTurn());
-            yield return StartCoroutine(EnemyTurn());
-            yield return StartCoroutine(WorldTurn());
-        }
-
-        Debug.Log("Battle has ended.");
-        OnBattleEnd(); // Call any post-battle logic
-    }
-    /// <summary>
     /// Ends the battle and stops the game loop.
     /// </summary>
     public void EndBattle()
@@ -199,20 +201,12 @@ public class GameManager : MonoBehaviour
         Debug.Log("Battle Over! Returning to menu or next scene...");
         // Add transition logic here (e.g., load scene, show UI)
     }
-    private IEnumerator PlayerTurn()
+    private void PlayerTurn()
     {
-        Debug.Log("Player's Turn");
-        PlayerBehaviour player = playerTile.objectOnTile.GetComponent<PlayerBehaviour>();
-        player.TurnOrginTile = playerTile.gridLocation;
-        player.attacking = false;
-        playerTurn = true;
-        EndTurn();
-        yield return new WaitUntil(() => enemyTurn);
-
-        TurnState = 2;
+        TurnState = 1;
     }
 
-    private IEnumerator EnemyTurn()
+    private void EnemyTurn()
     {
         Debug.Log("Enemy's Turn");
         enemies = GameObject.FindGameObjectsWithTag(enemyTag);
@@ -221,17 +215,15 @@ public class GameManager : MonoBehaviour
         foreach (GameObject obj in enemies)
         {
             EnemyMovement enemyMoveScript = obj.GetComponent<EnemyMovement>();
+            EnemyAttack enemyAttackScript = obj.GetComponent<EnemyAttack>();
             if (enemyMoveScript != null)
             {
                 enemyMoveScript.DoEnemyMovement();
+                enemyAttackScript.TryToAttack();
             }
         }
-
-        //PlayedTurn = true;
         EndTurn();
-        yield return new WaitUntil(() => worldTurn);
-
-        TurnState = 3;
+        TurnState = 2;
 
         // Check if all enemies are defeated
         if (GameObject.FindGameObjectsWithTag(enemyTag).Length == 0)
@@ -240,25 +232,21 @@ public class GameManager : MonoBehaviour
         }
     }
 
-    private IEnumerator WorldTurn()
+    private void WorldTurn()
     {
         Debug.Log("World's Turn");
         //worldHazards = GameObject.FindGameObjectsWithTag(hazardTag);
         //PlayedTurn = false;
 
-        foreach (GameObject obj in worldHazards)
+        /*foreach (GameObject obj in worldHazards)
         {
             Hazard hazardScript = obj.GetComponent<Hazard>();
             if (hazardScript != null)
             {
                 hazardScript.TickDownTimer();
             }
-        }
-
-        //PlayedTurn = true;
+        }*/
         EndTurn();
-        yield return new WaitUntil(() => playerTurn);
-
-        TurnState = 1;
+        TurnState = 3;
     }
 }
