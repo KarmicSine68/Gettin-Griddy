@@ -309,7 +309,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 2ffba898322a60848a6b1db5c79d68d7, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  lives: 5
+  lives: 50
   loseScene: LoseScene
   LivesText: {fileID: 269422007}
 --- !u!4 &502793655
@@ -627,7 +627,6 @@ MonoBehaviour:
   playerTile: {fileID: 0}
   EnemyTiles: []
   boulder: {fileID: 5252985174513615257, guid: 3141f814348a101489cfd3c74a992208, type: 3}
-  enemies: []
   enemyTag: Enemy
   worldHazards: []
   hazardTag: Hazard
