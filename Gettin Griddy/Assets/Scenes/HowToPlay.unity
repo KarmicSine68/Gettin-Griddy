@@ -217,9 +217,10 @@ MonoBehaviour:
     m_PersistentCalls:
       m_Calls: []
   m_text: "- There are two phases, Move Mode and Attack Mode.\n- You can move up
-    to 3 tiles during Move Mode. \n- Pressing space ends Move Mode and enters Attack
-    Mode.\n- Your attack is a 3 tile horizontal strip in front of the player.\n-
-    Pressing a direction during Attack Mode confirms your attack and ends your turn.\n"
+    to 3 tiles from where you start the turn during Move Mode. \n- Pressing space
+    ends Move Mode and enters Attack Mode.\n- Your attack is a 3 tile horizontal
+    strip in front of the player.\n- Pressing a direction (w,a,s, or d) during Attack
+    Mode confirms your attack and ends your turn.\n"
   m_isRightToLeft: 0
   m_fontAsset: {fileID: 11400000, guid: 8f586378b4e144a9851e7b34d9b748ee, type: 2}
   m_sharedMaterial: {fileID: 2180264, guid: 8f586378b4e144a9851e7b34d9b748ee, type: 2}
@@ -1415,7 +1416,8 @@ MonoBehaviour:
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
-  m_text: "WASD - Move\nSpace - Enter Attack Mode \nEnter - End Turn Early"
+  m_text: "WASD - Move/Attack (Depends on current mode)\nSpace - Enter Attack Mode
+    \nEnter - End Turn Without Attacking"
   m_isRightToLeft: 0
   m_fontAsset: {fileID: 11400000, guid: 8f586378b4e144a9851e7b34d9b748ee, type: 2}
   m_sharedMaterial: {fileID: 2180264, guid: 8f586378b4e144a9851e7b34d9b748ee, type: 2}
@@ -1478,7 +1480,7 @@ MonoBehaviour:
   m_VertexBufferAutoSizeReduction: 0
   m_useMaxVisibleDescender: 1
   m_pageToDisplay: 1
-  m_margin: {x: -170.99817, y: 0, z: -163.82483, w: 0}
+  m_margin: {x: -170.99817, y: 0, z: -214.54797, w: -135.75122}
   m_isUsingLegacyAnimationComponent: 0
   m_isVolumetricText: 0
   m_hasFontAssetChanged: 0
