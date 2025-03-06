@@ -65,7 +65,6 @@ public class EnemyMovement : GridMovement
         if (closestTile != null)
         {
             MoveEnemy(closestTile.gridLocation - GetTile().gridLocation);
-            movesUsed++;
         }
     }
     public bool HasUnusedMoves() {
