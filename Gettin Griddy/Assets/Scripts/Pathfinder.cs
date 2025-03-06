@@ -1,4 +1,9 @@
-using System.Collections;
+/******************************************************************************
+ * Author: Skylar Turner
+ * File Name: Pathfinder.cs
+ * Creation Date: 3/5/2025
+ * Brief: Handles the calculations necessary for pathfinding.
+ * ***************************************************************************/
 using System.Collections.Generic;
 using UnityEngine;
 
