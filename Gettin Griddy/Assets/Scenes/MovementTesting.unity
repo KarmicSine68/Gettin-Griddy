@@ -625,19 +625,33 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   player: {fileID: 5783697498280076704, guid: eaedc24f9f2ce614d9b44a938a358d09, type: 3}
   enemy: {fileID: 8998121906072561065, guid: 5fd55a35abbaa3f46964715dc1db1eaf, type: 3}
+  boulder: {fileID: 5252985174513615257, guid: 3141f814348a101489cfd3c74a992208, type: 3}
   gridSpace: {fileID: 1894923049652469044, guid: 3f3292cccda260349825f898e3e5ecb0, type: 3}
+  playerMoveLimit: 3
+  playerSpawnLocation: {x: 4, y: 4}
+  boulderSpawnLocations:
+  - {x: 1, y: 2}
+  - {x: 1, y: 4}
+  - {x: 2, y: 1}
+  - {x: 2, y: 6}
+  - {x: 2, y: 7}
+  - {x: 3, y: 1}
+  - {x: 4, y: 7}
+  - {x: 5, y: 5}
+  - {x: 6, y: 3}
+  - {x: 6, y: 4}
+  enemySpawnLocations:
+  - {x: -1, y: -1}
+  - {x: -1, y: -1}
+  - {x: -1, y: -1}
+  - {x: -1, y: -1}
+  - {x: -1, y: -1}
   playerTile: {fileID: 0}
   EnemyTiles: []
-  boulder: {fileID: 5252985174513615257, guid: 3141f814348a101489cfd3c74a992208, type: 3}
-  enemyTag: Enemy
   worldHazards: []
-  hazardTag: Hazard
-  enemiesToSpawn: 15
-  bouldersToSpawn: 5
   playerTurn: 1
   worldTurn: 0
   enemyTurn: 0
-  moveLimit: 3
   rows: 9
   columns: 9
   TurnState: 1

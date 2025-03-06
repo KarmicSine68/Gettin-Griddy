@@ -45,7 +45,7 @@ public class PlayerBehaviour : GridMovement
         gm.playerTile = GetTile();
         GetTile().SetObjectOnTile(gameObject);
         TurnOrginTile = GetTile().gridLocation;
-        
+        tilesToAttack = new List<TileBehaviour>();
     }
 
     private void EndTurn(InputAction.CallbackContext obj)
@@ -78,7 +78,7 @@ public class PlayerBehaviour : GridMovement
     {
         if (attacking) {
             Vector2 attackDir = playerMove.ReadValue<Vector2>();
-            if (tilesToAttack == null)
+            if (tilesToAttack.Count <= 0)
             {
                 tilesToAttack = gm.FindAttackTiles(attackDir);
             }
@@ -112,13 +112,13 @@ public class PlayerBehaviour : GridMovement
         if (attacking) {
             GetComponent<Renderer>().material.color = Color.red;
         } else {
-            if (tilesToAttack != null)
+            if (tilesToAttack.Count > 0)
             {
                 foreach (TileBehaviour tile in tilesToAttack)
                 {
                     tile.SetColor(Color.white);
                 }
-                tilesToAttack = null;
+                tilesToAttack.Clear();
             }
             GetComponent<Renderer>().material.color = Color.green;
         }
@@ -134,9 +134,7 @@ public class PlayerBehaviour : GridMovement
             if (moveDir.x > 0)
             {
                 if (withinTurnsMoveLimit(moveDir)) {
-                    GetTile().objectOnTile = null;
                     Move(Vector3.right);
-                    GetTile().objectOnTile = gameObject;
                     gm.playerTile = GetTile();
                 }   
             }
@@ -144,9 +142,7 @@ public class PlayerBehaviour : GridMovement
             {
                 if (withinTurnsMoveLimit(moveDir))
                 {
-                    GetTile().objectOnTile = null;
                     Move(Vector3.left);
-                    GetTile().objectOnTile = gameObject;
                     gm.playerTile = GetTile();
                 }
             }
@@ -154,9 +150,7 @@ public class PlayerBehaviour : GridMovement
             {
                 if (withinTurnsMoveLimit(moveDir))
                 {
-                    GetTile().objectOnTile = null;
                     Move(Vector3.forward);
-                    GetTile().objectOnTile = gameObject;
                     gm.playerTile = GetTile();
                 }
             }
@@ -164,9 +158,7 @@ public class PlayerBehaviour : GridMovement
             {
                 if (withinTurnsMoveLimit(moveDir))
                 {
-                    GetTile().objectOnTile = null;
                     Move(Vector3.back);
-                    GetTile().objectOnTile = gameObject;
                     gm.playerTile = GetTile();
                 }
             } 
@@ -178,13 +170,13 @@ public class PlayerBehaviour : GridMovement
         int tilesMovedX = Mathf.Abs(((int)GetTile().gridLocation.x + (int)moveDir.x) - (int)TurnOrginTile.x);
         int tilesMovedY = Mathf.Abs(((int)GetTile().gridLocation.y + (int)moveDir.y) - (int)TurnOrginTile.y);
 
-        if ((tilesMovedX + tilesMovedY) <= gm.moveLimit) {
+        if ((tilesMovedX + tilesMovedY) <= gm.playerMoveLimit) {
             //print("You have moved " + (tilesMovedX + tilesMovedY) + " tiles");
         } else {
             gm.HighlightMoveRange();
         }
 
-        if ((tilesMovedX + tilesMovedY) <= gm.moveLimit)
+        if ((tilesMovedX + tilesMovedY) <= gm.playerMoveLimit)
         {
             return true;
         }
