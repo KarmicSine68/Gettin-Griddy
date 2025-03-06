@@ -37,38 +37,26 @@ public class EnemyMovement : GridMovement
             if (r < 1)
             {
                 gm.RemoveEnemy(gameObject);
-                GetTile().objectOnTile = null;
-                
                 Move(new Vector3(Mathf.Sign(distanceX), 0, 0));
-                GetTile().objectOnTile = gameObject;
                 gm.TrackEnemy(GetTile());
             }
             else
             {
                 gm.RemoveEnemy(gameObject);
-                GetTile().objectOnTile = null;
-                
                 Move(new Vector3(0, 0, Mathf.Sign(distanceY)));
-                GetTile().objectOnTile = gameObject;
                 gm.TrackEnemy(GetTile());
             }
         }
         else if (canMoveX)
         {
             gm.RemoveEnemy(gameObject);
-            GetTile().objectOnTile = null;
-            
             Move(new Vector3(Mathf.Sign(distanceX), 0, 0));
-            GetTile().objectOnTile = gameObject;
             gm.TrackEnemy(GetTile());
         }
         else if (canMoveY)
         {
             gm.RemoveEnemy(gameObject);
-            GetTile().objectOnTile = null;
-            
             Move(new Vector3(0, 0, Mathf.Sign(distanceY)));
-            GetTile().objectOnTile = gameObject;
             gm.TrackEnemy(GetTile());
         }
     }

@@ -10,7 +10,7 @@ using UnityEngine;
 
 public class GridMovement : MonoBehaviour
 {
-
+    public float moveTime = 0.2f;
     //moves the player to a new space
     protected bool Move(Vector3 dir)
     {
@@ -19,12 +19,13 @@ public class GridMovement : MonoBehaviour
             Vector3 newPos = transform.position;
             newPos.x += dir.x;
             newPos.z += dir.z;
+            GetTile().objectOnTile = null;
             transform.position = newPos;
+            GetTile().objectOnTile = gameObject;
             return true;
         }
         return false;
     }
-
     //figures out if a tile has a neighboring tile in that direction
     protected bool HasTile(Vector3 dir)
     {
