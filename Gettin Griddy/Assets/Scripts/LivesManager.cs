@@ -26,7 +26,12 @@ public class LivesManager : MonoBehaviour
     {
         if (lives <= 0)
         {
-            SceneManager.LoadScene(loseScene);
+            Destroy(GameObject.FindObjectOfType<PlayerBehaviour>().gameObject);
+            StartCoroutine(wait());
         }
+    }
+    private IEnumerator wait() {
+        yield return new WaitForSeconds(0.5f);
+        SceneManager.LoadScene(loseScene);
     }
 }

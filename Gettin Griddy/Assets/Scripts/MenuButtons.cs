@@ -11,7 +11,7 @@ public class MenuButtons : MonoBehaviour
 {
     public void OnClickPlay()
     {
-        SceneManager.LoadScene("GameScene"); //will need to be renamed to whatever the actual scene name is called
+        SceneManager.LoadScene("MovementTesting"); //will need to be renamed to whatever the actual scene name is called
     }
 
     public void OnClickCredits()

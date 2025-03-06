@@ -14,22 +14,22 @@ public class EnemyAttack : MonoBehaviour
         TileBehaviour currentTile = GetTile();
         TileBehaviour playerTile = gm.playerTile;
         LivesManager lm = GameObject.FindObjectOfType<LivesManager>();
-        if (currentTile.GetNeighbor(Vector3.forward).objectOnTile == playerTile.gameObject) 
+        if (currentTile.GetNeighbor(Vector3.forward) == playerTile) 
         {
             currentTile.GetNeighbor(Vector3.forward).FlashColor(Color.red);
             lm.DecreaseLives();
         }
-        if (currentTile.GetNeighbor(Vector3.back).objectOnTile == playerTile.gameObject)
+        if (currentTile.GetNeighbor(Vector3.back) == playerTile)
         {
             currentTile.GetNeighbor(Vector3.back).FlashColor(Color.red);
             lm.DecreaseLives();
         }
-        if (currentTile.GetNeighbor(Vector3.left).objectOnTile == playerTile.gameObject)
+        if (currentTile.GetNeighbor(Vector3.left) == playerTile)
         {
             currentTile.GetNeighbor(Vector3.left).FlashColor(Color.red);
             lm.DecreaseLives();
         }
-        if (currentTile.GetNeighbor(Vector3.right).objectOnTile == playerTile.gameObject)
+        if (currentTile.GetNeighbor(Vector3.right) == playerTile)
         {
             currentTile.GetNeighbor(Vector3.right).FlashColor(Color.red);
             lm.DecreaseLives();

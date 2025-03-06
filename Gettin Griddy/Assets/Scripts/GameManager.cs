@@ -15,15 +15,20 @@ public class GameManager : MonoBehaviour
     [SerializeField] private GameObject enemy;
     [SerializeField] private GameObject gridSpace;
     [SerializeField] public TileBehaviour playerTile;
-    [SerializeField] private List<TileBehaviour> EnemyTiles;
+    [SerializeField] public List<TileBehaviour> EnemyTiles;
     [SerializeField] private GameObject boulder;
     
-    [SerializeField] private GameObject[] enemies;
+
     [SerializeField] private string enemyTag = "Enemy";
     [SerializeField] private GameObject[] worldHazards;
     [SerializeField] private string hazardTag = "Hazard";
 
+    public int enemiesToSpawn = 2;
+    public int bouldersToSpawn = 5;
+
     public bool playerTurn = true;
+    public bool worldTurn = false;
+    public bool enemyTurn = false;
     public int moveLimit = 3;
 
     public TileBehaviour[,] grid;
@@ -33,7 +38,7 @@ public class GameManager : MonoBehaviour
     [SerializeField] private int rows;
     [Tooltip("How many columns are in the grid")]
     [SerializeField] private int columns;
-    private bool PlayedTurn = false;
+
     private bool isBattleActive = true; // Battle control flag
 
     [SerializeField] private int TurnState = 1;
@@ -55,14 +60,34 @@ public class GameManager : MonoBehaviour
             }
         }
         Spawn(player);
+        for (int i = 0; i < bouldersToSpawn; i++)
+        {
+            Spawn(boulder);
+        }
         Spawn(boulder);
-        for (int i = 0; i < 1; i++) {
+        for (int i = 0; i < enemiesToSpawn; i++) {
             Spawn(enemy);
         }
-        enemies = GameObject.FindGameObjectsWithTag(enemyTag);
-        //worldHazards = GameObject.FindGameObjectsWithTag(hazardTag);
-
-        StartCoroutine(GameLoop()); // Start the turn system
+        
+    }
+    private void FixedUpdate()
+    {
+        if (playerTurn)
+        {
+            PlayerTurn();
+        }
+        else if (enemyTurn)
+        {
+            EnemyTurn();
+        }
+        else if (worldTurn)
+        {
+            WorldTurn();
+        }
+        else
+        {
+            print("how is it no ones turn? wtf dude");
+        }
     }
     /// <summary>
     /// spawn a game object on a random unoccupied tile
@@ -72,23 +97,33 @@ public class GameManager : MonoBehaviour
     private void Spawn(GameObject obj) {
         int x = Random.Range(0, columns);
         int y = Random.Range(0, rows);
-        while (grid[x,y].hasObject) {
+        while (grid[x,y].objectOnTile != null) {
             x = Random.Range(0, columns);
             y = Random.Range(0, rows);
         }
-        grid[x, y].hasObject = true;
         Vector3 spawnPos = grid[x, y].transform.position;
         spawnPos += new Vector3(.5f, 1.5f, .5f);
-        Instantiate(obj, spawnPos, Quaternion.identity);
+        grid[x, y].objectOnTile = Instantiate(obj, spawnPos, Quaternion.identity);
     }
     public void EndTurn() {
-        if (PlayedTurn)
+        if (playerTurn)
         {
-            PlayedTurn = false;
+            enemyTurn = true;
+            playerTurn = false;
+            worldTurn = false;
         }
-        /*else {
-            PlayedTurn = true;
-        }*/
+        else if (enemyTurn)
+        {
+            enemyTurn = false;
+            playerTurn = false;
+            worldTurn = true;
+        }
+        else if (worldTurn)
+        {
+            enemyTurn = false;
+            playerTurn = true;
+            worldTurn = false;
+        }
     }
     /// <summary>
     /// Updates where in the grid the player is
@@ -103,7 +138,7 @@ public class GameManager : MonoBehaviour
         EnemyTiles.Add(tileScript);
     }
     public void RemoveEnemy(GameObject enemy) {
-        print("called");
+        //print("called");
         foreach (TileBehaviour tile in EnemyTiles) {
             if (tile.objectOnTile == enemy) {
                 EnemyTiles.Remove(tile);
@@ -155,22 +190,6 @@ public class GameManager : MonoBehaviour
     }
 
     /// <summary>
-    /// Main turn loop that runs sequentially.
-    /// Ends when the battle is no longer active.
-    /// </summary>
-    private IEnumerator GameLoop()
-    {
-        while (isBattleActive) // Run while battle is active
-        {
-            yield return StartCoroutine(PlayerTurn());
-            yield return StartCoroutine(EnemyTurn());
-            //yield return StartCoroutine(WorldTurn());
-        }
-
-        Debug.Log("Battle has ended.");
-        OnBattleEnd(); // Call any post-battle logic
-    }
-    /// <summary>
     /// Ends the battle and stops the game loop.
     /// </summary>
     public void EndBattle()
@@ -186,37 +205,37 @@ public class GameManager : MonoBehaviour
         Debug.Log("Battle Over! Returning to menu or next scene...");
         // Add transition logic here (e.g., load scene, show UI)
     }
-    private IEnumerator PlayerTurn()
+    private void PlayerTurn()
     {
-        Debug.Log("Player's Turn");
-        PlayerBehaviour player = playerTile.objectOnTile.GetComponent<PlayerBehaviour>();
-        player.TurnOrginTile = playerTile.gridLocation;
-        player.attacking = false;
-        playerTurn = false;
-        yield return new WaitUntil(() => PlayedTurn);
-
-        TurnState = 2;
+        TurnState = 1;
     }
-
-    private IEnumerator EnemyTurn()
-    {
-        Debug.Log("Enemy's Turn");
-        enemies = GameObject.FindGameObjectsWithTag(enemyTag);
-        PlayedTurn = false;
-
-        foreach (GameObject obj in enemies)
-        {
-            EnemyMovement enemyMoveScript = obj.GetComponent<EnemyMovement>();
-            if (enemyMoveScript != null)
-            {
-                enemyMoveScript.DoEnemyMovement();
+    public void HighlightMoveRange() {
+        foreach (TileBehaviour tile in grid) {
+            int tilesAwayX = Mathf.Abs((int)tile.gridLocation.x - (int)playerTile.objectOnTile.GetComponent<PlayerBehaviour>().TurnOrginTile.x);
+            int tilesAwayY = Mathf.Abs((int)tile.gridLocation.y - (int)playerTile.objectOnTile.GetComponent<PlayerBehaviour>().TurnOrginTile.y);
+            if ((tilesAwayX + tilesAwayY) <= 3) {
+                tile.FlashColor(Color.cyan);
             }
         }
+    }
+    private void EnemyTurn()
+    {
+        //Debug.Log("Enemy's Turn");
+        EnemyMovement[] moveScripts = GameObject.FindObjectsOfType<EnemyMovement>();
+        foreach (EnemyMovement enemyScript in moveScripts)
+        {
+            enemyScript.DoEnemyMovement();
+        }
 
-        PlayedTurn = true;
-        yield return new WaitUntil(() => PlayedTurn);
+        EnemyAttack[] attackScripts = GameObject.FindObjectsOfType<EnemyAttack>();
+        foreach (EnemyAttack enemyScript in attackScripts)
+        {
+            print(enemyScript.gameObject.name + " attacked");
+            enemyScript.TryToAttack();
+        }
 
-        TurnState = 3;
+        EndTurn();
+        TurnState = 2;
 
         // Check if all enemies are defeated
         if (GameObject.FindGameObjectsWithTag(enemyTag).Length == 0)
@@ -225,24 +244,24 @@ public class GameManager : MonoBehaviour
         }
     }
 
-    private IEnumerator WorldTurn()
+    private void WorldTurn()
     {
-        Debug.Log("World's Turn");
-        worldHazards = GameObject.FindGameObjectsWithTag(hazardTag);
-        PlayedTurn = false;
-
-        foreach (GameObject obj in worldHazards)
+        //Debug.Log("World's Turn");
+        //worldHazards = GameObject.FindGameObjectsWithTag(hazardTag);
+        /*foreach (GameObject obj in worldHazards)
         {
             Hazard hazardScript = obj.GetComponent<Hazard>();
             if (hazardScript != null)
             {
                 hazardScript.TickDownTimer();
             }
-        } 
-
-        PlayedTurn = true;
-        yield return new WaitUntil(() => PlayedTurn);
-
-        TurnState = 1;
+        }*/
+        EndTurn();
+        PlayerBehaviour player = playerTile.objectOnTile.GetComponent<PlayerBehaviour>();
+        player.TurnOrginTile = playerTile.gridLocation;
+        player.attacking = false;
+        TurnState = 3;
     }
 }
+
+

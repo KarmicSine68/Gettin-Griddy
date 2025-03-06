@@ -10,44 +10,66 @@ public class EnemyMovement : GridMovement
     private void Start()
     {
         gm = GameObject.FindObjectOfType<GameManager>();
+        gm.EnemyTiles.Add(GetTile());
+        GetTile().objectOnTile = gameObject;
     }
     public void DoEnemyMovement() {
-        print(currentTile);
-        int distanceX = (int)gm.playerTile.gridLocation.x - (int)currentTile.gridLocation.x;
-        int distanceY = (int)gm.playerTile.gridLocation.y - (int)currentTile.gridLocation.y;
+        //print(GetTile());
+        int distanceX = (int)gm.playerTile.gridLocation.x - (int)GetTile().gridLocation.x;
+        int distanceY = (int)gm.playerTile.gridLocation.y - (int)GetTile().gridLocation.y;
+
         bool canMoveX = true;
         bool canMoveY = true;
-        if (distanceX == 0 || currentTile.GetNeighbor(new Vector3(Mathf.Sign(distanceX), 0, 0)).hasObject) {
+
+        if (distanceX == 0 || GetTile().GetNeighbor(new Vector3(Mathf.Sign(distanceX), 0, 0)).objectOnTile != null) {
             canMoveX = false;
         }
-        if (distanceY == 0 || currentTile.GetNeighbor(new Vector3(0, 0, Mathf.Sign(distanceY))).hasObject)
+        if (distanceY == 0 || GetTile().GetNeighbor(new Vector3(0, 0, Mathf.Sign(distanceY))).objectOnTile != null)
         {
             canMoveY = false;
         }
 
-        print("distance to player: " + distanceX + ", " + distanceY + "---" + canMoveX + canMoveY);
+        //print("distance to player: " + distanceX + ", " + distanceY + "---" + canMoveX + canMoveY);
         //choosing a direction to move in if it even can
         if (canMoveX && canMoveY)
         {
             int r = Random.Range(0, 2);
             if (r < 1)
             {
+                gm.RemoveEnemy(gameObject);
+                GetTile().objectOnTile = null;
+                
                 Move(new Vector3(Mathf.Sign(distanceX), 0, 0));
+                GetTile().objectOnTile = gameObject;
+                gm.TrackEnemy(GetTile());
             }
             else
             {
-                Move(new Vector3(0, 0, Mathf.Sign(distanceX)));
+                gm.RemoveEnemy(gameObject);
+                GetTile().objectOnTile = null;
+                
+                Move(new Vector3(0, 0, Mathf.Sign(distanceY)));
+                GetTile().objectOnTile = gameObject;
+                gm.TrackEnemy(GetTile());
             }
         }
         else if (canMoveX)
         {
+            gm.RemoveEnemy(gameObject);
+            GetTile().objectOnTile = null;
+            
             Move(new Vector3(Mathf.Sign(distanceX), 0, 0));
-            movesUsed++;
+            GetTile().objectOnTile = gameObject;
+            gm.TrackEnemy(GetTile());
         }
         else if (canMoveY)
         {
-            Move(new Vector3(0, 0, Mathf.Sign(distanceX)));
-            movesUsed++;
+            gm.RemoveEnemy(gameObject);
+            GetTile().objectOnTile = null;
+            
+            Move(new Vector3(0, 0, Mathf.Sign(distanceY)));
+            GetTile().objectOnTile = gameObject;
+            gm.TrackEnemy(GetTile());
         }
     }
     public bool HasUnusedMoves() {
