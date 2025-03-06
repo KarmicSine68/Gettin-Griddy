@@ -1,3 +1,9 @@
+/******************************************************************************
+ * Author: ?????, Skylar Turner
+ * File Name: EnemyMovement.cs
+ * Creation Date: 2/??/2025
+ * Brief: Handles enemy movement.
+ * ***************************************************************************/
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
