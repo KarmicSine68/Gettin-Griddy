@@ -37,5 +37,10 @@ public class Hazard : MonoBehaviour
             //Deal damage
             other.gameObject.GetComponent<EnemyTakeDamage>().TakeDamage(damage);
         }
+        if(other.tag == "Player")
+        {
+            GameObject lives = GameObject.Find("LivesManager");
+            lives.GetComponent<LivesManager>().DecreaseLives();
+        }
     }
 }

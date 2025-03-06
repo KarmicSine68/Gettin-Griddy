@@ -246,16 +246,17 @@ public class GameManager : MonoBehaviour
 
     private void WorldTurn()
     {
-        //Debug.Log("World's Turn");
-        //worldHazards = GameObject.FindGameObjectsWithTag(hazardTag);
-        /*foreach (GameObject obj in worldHazards)
+        Debug.Log("World's Turn");
+        worldHazards = GameObject.FindGameObjectsWithTag(hazardTag);
+        foreach (GameObject obj in worldHazards)
         {
             Hazard hazardScript = obj.GetComponent<Hazard>();
             if (hazardScript != null)
             {
                 hazardScript.TickDownTimer();
             }
-        }*/
+        }
+
         EndTurn();
         PlayerBehaviour player = playerTile.objectOnTile.GetComponent<PlayerBehaviour>();
         player.TurnOrginTile = playerTile.gridLocation;
