@@ -37,6 +37,7 @@ public class SoundManager : MonoBehaviour
 
             //Adds the audio source to the clip that will be played
             i.source = temp.AddComponent<AudioSource>();
+            i.source.outputAudioMixerGroup = i.mixer;
             i.source.volume = i.maxVolume;
             i.source.pitch = i.pitch;
             i.source.playOnAwake = false;

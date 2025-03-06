@@ -7,6 +7,7 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.Audio;
 
 [System.Serializable]
 public class SFX
@@ -23,6 +24,9 @@ public class SFX
     //or stopped
     [HideInInspector]
     public AudioClip clip;
+
+    //The output for the clip
+    public AudioMixerGroup mixer;
 
     //A range for how loud the volume can be
     [Range(0f, 1f)]
