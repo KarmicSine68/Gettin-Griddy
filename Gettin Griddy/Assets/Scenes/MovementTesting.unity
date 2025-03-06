@@ -157,7 +157,7 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 1, y: 1}
   m_AnchorMax: {x: 1, y: 1}
-  m_AnchoredPosition: {x: -90.6, y: -20.6}
+  m_AnchoredPosition: {x: -90.599976, y: -20.599976}
   m_SizeDelta: {x: 160, y: 30}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &155811677
@@ -632,14 +632,14 @@ MonoBehaviour:
   enemyTag: Enemy
   worldHazards: []
   hazardTag: Hazard
-  enemiesToSpawn: 15
+  enemiesToSpawn: 12
   bouldersToSpawn: 5
   playerTurn: 1
   worldTurn: 0
   enemyTurn: 0
   moveLimit: 3
-  rows: 9
-  columns: 9
+  rows: 11
+  columns: 11
   TurnState: 1
 --- !u!4 &1121946167
 Transform:
