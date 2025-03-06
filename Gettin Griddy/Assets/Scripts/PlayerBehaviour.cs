@@ -170,13 +170,13 @@ public class PlayerBehaviour : GridMovement
         int tilesMovedX = Mathf.Abs(((int)GetTile().gridLocation.x + (int)moveDir.x) - (int)TurnOrginTile.x);
         int tilesMovedY = Mathf.Abs(((int)GetTile().gridLocation.y + (int)moveDir.y) - (int)TurnOrginTile.y);
 
-        if ((tilesMovedX + tilesMovedY) <= gm.moveLimit) {
+        if ((tilesMovedX + tilesMovedY) <= gm.playerMoveLimit) {
             //print("You have moved " + (tilesMovedX + tilesMovedY) + " tiles");
         } else {
             gm.HighlightMoveRange();
         }
 
-        if ((tilesMovedX + tilesMovedY) <= gm.moveLimit)
+        if ((tilesMovedX + tilesMovedY) <= gm.playerMoveLimit)
         {
             return true;
         }
