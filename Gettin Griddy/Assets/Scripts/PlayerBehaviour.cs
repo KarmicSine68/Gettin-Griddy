@@ -20,6 +20,7 @@ public class PlayerBehaviour : GridMovement
 
     private GameManager gm;
     public bool attacking = false;
+    public List<TileBehaviour> tilesToAttack;
     public Vector2 TurnOrginTile;
 
     /// <summary>
@@ -44,11 +45,18 @@ public class PlayerBehaviour : GridMovement
         gm.playerTile = GetTile();
         GetTile().SetObjectOnTile(gameObject);
         TurnOrginTile = GetTile().gridLocation;
-        
+        tilesToAttack = new List<TileBehaviour>();
     }
 
     private void EndTurn(InputAction.CallbackContext obj)
     {
+        foreach (TileBehaviour tile in tilesToAttack)
+        {
+            tile.SetColor(Color.white);
+            if (tile.objectOnTile != null && tile.objectOnTile.TryGetComponent<EnemyTakeDamage>(out EnemyTakeDamage enemy)) {
+                enemy.TakeDamage();
+            }
+        }
         gm.playerTile = GetTile();
         GetComponent<Renderer>().material.color = Color.green;
         gm.EndTurn();
@@ -70,19 +78,30 @@ public class PlayerBehaviour : GridMovement
     {
         if (attacking) {
             Vector2 attackDir = playerMove.ReadValue<Vector2>();
-            List<TileBehaviour> tilesInAttackRange = gm.FindAttackTiles(attackDir);
-            if (tilesInAttackRange.Count <= 0) {
+            if (tilesToAttack.Count <= 0)
+            {
+                tilesToAttack = gm.FindAttackTiles(attackDir);
+            }
+            else {
+                foreach (TileBehaviour tile in tilesToAttack)
+                {
+                    tile.SetColor(Color.white);
+                }
+                tilesToAttack = gm.FindAttackTiles(attackDir);
+            }
+            
+            if (tilesToAttack.Count <= 0) {
                 print("There're no tiles that way goofy");
             } else {
-                foreach (TileBehaviour tile in tilesInAttackRange) {
-                    tile.FlashColor(Color.green);
-                    if (tile.objectOnTile != null && tile.objectOnTile.TryGetComponent<EnemyTakeDamage>(out EnemyTakeDamage enemy)) {
+                foreach (TileBehaviour tile in tilesToAttack) {
+                    tile.SetColor(Color.green);
+                    /*if (tile.objectOnTile != null && tile.objectOnTile.TryGetComponent<EnemyTakeDamage>(out EnemyTakeDamage enemy)) {
                         enemy.TakeDamage();
-                    }
+                    }*/
                 }
-                gm.playerTile = GetTile();
-                GetComponent<Renderer>().material.color = Color.green;
-                gm.EndTurn();  
+               // gm.playerTile = GetTile();
+               // GetComponent<Renderer>().material.color = Color.green;
+                //gm.EndTurn();  
             }
         }
     }
@@ -93,6 +112,14 @@ public class PlayerBehaviour : GridMovement
         if (attacking) {
             GetComponent<Renderer>().material.color = Color.red;
         } else {
+            if (tilesToAttack.Count > 0)
+            {
+                foreach (TileBehaviour tile in tilesToAttack)
+                {
+                    tile.SetColor(Color.white);
+                }
+                tilesToAttack.Clear();
+            }
             GetComponent<Renderer>().material.color = Color.green;
         }
     }
@@ -107,9 +134,7 @@ public class PlayerBehaviour : GridMovement
             if (moveDir.x > 0)
             {
                 if (withinTurnsMoveLimit(moveDir)) {
-                    GetTile().objectOnTile = null;
                     Move(Vector3.right);
-                    GetTile().objectOnTile = gameObject;
                     gm.playerTile = GetTile();
                 }   
             }
@@ -117,9 +142,7 @@ public class PlayerBehaviour : GridMovement
             {
                 if (withinTurnsMoveLimit(moveDir))
                 {
-                    GetTile().objectOnTile = null;
                     Move(Vector3.left);
-                    GetTile().objectOnTile = gameObject;
                     gm.playerTile = GetTile();
                 }
             }
@@ -127,9 +150,7 @@ public class PlayerBehaviour : GridMovement
             {
                 if (withinTurnsMoveLimit(moveDir))
                 {
-                    GetTile().objectOnTile = null;
                     Move(Vector3.forward);
-                    GetTile().objectOnTile = gameObject;
                     gm.playerTile = GetTile();
                 }
             }
@@ -137,9 +158,7 @@ public class PlayerBehaviour : GridMovement
             {
                 if (withinTurnsMoveLimit(moveDir))
                 {
-                    GetTile().objectOnTile = null;
                     Move(Vector3.back);
-                    GetTile().objectOnTile = gameObject;
                     gm.playerTile = GetTile();
                 }
             } 
@@ -151,13 +170,13 @@ public class PlayerBehaviour : GridMovement
         int tilesMovedX = Mathf.Abs(((int)GetTile().gridLocation.x + (int)moveDir.x) - (int)TurnOrginTile.x);
         int tilesMovedY = Mathf.Abs(((int)GetTile().gridLocation.y + (int)moveDir.y) - (int)TurnOrginTile.y);
 
-        if ((tilesMovedX + tilesMovedY) <= gm.moveLimit) {
+        if ((tilesMovedX + tilesMovedY) <= gm.playerMoveLimit) {
             //print("You have moved " + (tilesMovedX + tilesMovedY) + " tiles");
         } else {
             gm.HighlightMoveRange();
         }
 
-        if ((tilesMovedX + tilesMovedY) <= gm.moveLimit)
+        if ((tilesMovedX + tilesMovedY) <= gm.playerMoveLimit)
         {
             return true;
         }

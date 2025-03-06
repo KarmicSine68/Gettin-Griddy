@@ -13,25 +13,26 @@ public class GameManager : MonoBehaviour
 {
     [SerializeField] private GameObject player;
     [SerializeField] private GameObject enemy;
-    [SerializeField] private GameObject gridSpace;
-    [SerializeField] public TileBehaviour playerTile;
-    [SerializeField] public List<TileBehaviour> EnemyTiles;
     [SerializeField] private GameObject boulder;
+    [SerializeField] private GameObject gridSpace;
+    public int playerMoveLimit = 3;
+    [SerializeField] private Vector2 playerSpawnLocation;
+    [SerializeField] private Vector2[] boulderSpawnLocations;
+    [SerializeField] private Vector2[] enemySpawnLocations;
+    
+    [HideInInspector] public TileBehaviour playerTile;
+    [HideInInspector] public List<TileBehaviour> EnemyTiles;
+    [HideInInspector] private string enemyTag = "Enemy";
+    [HideInInspector] private string hazardTag = "Hazard";
+   
+    
+    [SerializeField] private GameObject[] worldHazards;
     
 
-    [SerializeField] private string enemyTag = "Enemy";
-    [SerializeField] private GameObject[] worldHazards;
-    [SerializeField] private string hazardTag = "Hazard";
-
-    public int enemiesToSpawn = 2;
-    public int bouldersToSpawn = 5;
-
-    public bool playerTurn = true;
-    public bool worldTurn = false;
-    public bool enemyTurn = false;
-    public int moveLimit = 3;
-
-    public TileBehaviour[,] grid;
+    [HideInInspector] public bool playerTurn = true;
+    [HideInInspector] public bool worldTurn = false;
+    [HideInInspector] public bool enemyTurn = false;
+    [HideInInspector] public TileBehaviour[,] grid;
 
     [Header("Grid Parameters")]
     [Tooltip("How many rows are in the grid")]
@@ -59,14 +60,14 @@ public class GameManager : MonoBehaviour
                 grid[j, i].gridLocation = new Vector2(j, i);
             }
         }
-        Spawn(player);
-        for (int i = 0; i < bouldersToSpawn; i++)
+
+        Spawn(player,playerSpawnLocation);
+        for (int i = 0; i < boulderSpawnLocations.Length; i++)
         {
-            Spawn(boulder);
+            Spawn(boulder, boulderSpawnLocations[i]);
         }
-        Spawn(boulder);
-        for (int i = 0; i < enemiesToSpawn; i++) {
-            Spawn(enemy);
+        for (int i = 0; i < enemySpawnLocations.Length; i++) {
+            Spawn(enemy, enemySpawnLocations[i]);
         }
         
     }
@@ -94,7 +95,7 @@ public class GameManager : MonoBehaviour
     /// </summary>
     /// <param name="obj"></param>
     /// pretty sure that this works fine at runtime but it has errors when it first generates enemies
-    private void Spawn(GameObject obj) {
+    private void SpawnRandom(GameObject obj) {
         int x = Random.Range(0, columns);
         int y = Random.Range(0, rows);
         while (grid[x,y].objectOnTile != null) {
@@ -104,6 +105,22 @@ public class GameManager : MonoBehaviour
         Vector3 spawnPos = grid[x, y].transform.position;
         spawnPos += new Vector3(.5f, 1.5f, .5f);
         grid[x, y].objectOnTile = Instantiate(obj, spawnPos, Quaternion.identity);
+    }
+    private void Spawn(GameObject obj, Vector2 location)
+    {
+        if (!gridHasPosition(location)) {
+            print("Tile doesn't exist, spawning at random location instead");
+            SpawnRandom(obj);
+        }
+        else if (grid[(int)location.x, (int)location.y].objectOnTile != null)
+        {
+            print("Tile is occupied, spawning at random location instead");
+            SpawnRandom(obj);
+        } else {
+            Vector3 spawnPos = grid[(int)location.x, (int)location.y].transform.position;
+            spawnPos += new Vector3(.5f, 1.5f, .5f);
+            grid[(int)location.x, (int)location.y].objectOnTile = Instantiate(obj, spawnPos, Quaternion.identity);
+        }
     }
     public void EndTurn() {
         if (playerTurn)
@@ -214,7 +231,7 @@ public class GameManager : MonoBehaviour
             int tilesAwayX = Mathf.Abs((int)tile.gridLocation.x - (int)playerTile.objectOnTile.GetComponent<PlayerBehaviour>().TurnOrginTile.x);
             int tilesAwayY = Mathf.Abs((int)tile.gridLocation.y - (int)playerTile.objectOnTile.GetComponent<PlayerBehaviour>().TurnOrginTile.y);
             if ((tilesAwayX + tilesAwayY) <= 3) {
-                tile.FlashColor(Color.gray);
+                tile.FlashColor(Color.cyan);
             }
         }
     }
