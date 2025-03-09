@@ -52,7 +52,8 @@ public class EnemyMovement : GridMovement
         List<TileBehaviour> neighbors = GetTile().GetNeighbors();
 
         TileBehaviour closestTile = null;
-        float minDistance = float.MaxValue;
+        float currentDistance = Vector2.Distance(GetTile().gridLocation, gm.playerTile.gridLocation);
+        float minDistance = currentDistance;
 
         // Iterate through all neighbors to find the closest walkable one
         foreach (TileBehaviour neighbor in neighbors)
