@@ -1,5 +1,5 @@
 /******************************************************************************
- * Author: Brad Dixon, Tyler Bouchard
+ * Author: Brad Dixon, Tyler Bouchard, Skylar Turner
  * File Name: TileBehaviour.cs
  * Creation Date: 2/25/2025
  * Brief: Childs whatever object is on the tile to the tile
@@ -82,5 +82,30 @@ public class TileBehaviour : MonoBehaviour
             yield return null;
         }
         material.color = Color.white;
+    }
+
+    public bool IsWalkable()
+    {
+        return objectOnTile == null || objectOnTile.GetComponent<PlayerBehaviour>() != null;
+    }
+
+    public List<TileBehaviour> GetNeighbors()
+    {
+        List<TileBehaviour> neighbors = new List<TileBehaviour>();
+        Vector3[] directions = new Vector3[]
+        {
+            new Vector3(1,0,0), new Vector3(-1,0,0),
+            new Vector3(0,0,1), new Vector3(0,0,-1)
+        };
+
+        foreach (Vector3 dir in directions)
+        {
+            TileBehaviour neighbor = GetNeighbor(dir);
+            if(neighbor != null && neighbor.IsWalkable())
+            {
+                neighbors.Add(neighbor);
+            }
+        }
+        return neighbors;
     }
 }
