@@ -8,6 +8,7 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.UI;
 
 public class GameManager : MonoBehaviour
 {
@@ -15,6 +16,7 @@ public class GameManager : MonoBehaviour
     [SerializeField] private GameObject enemy;
     [SerializeField] private GameObject boulder;
     [SerializeField] private GameObject gridSpace;
+    [SerializeField] private Text TurnText;
     public int playerMoveLimit = 3;
     [SerializeField] private Vector2 playerSpawnLocation;
     [SerializeField] private Vector2[] boulderSpawnLocations;
@@ -224,6 +226,7 @@ public class GameManager : MonoBehaviour
     }
     private void PlayerTurn()
     {
+        TurnText.text = "Player's Turn";
         TurnState = 1;
     }
     public void HighlightMoveRange() {
@@ -237,7 +240,7 @@ public class GameManager : MonoBehaviour
     }
     private void EnemyTurn()
     {
-        //Debug.Log("Enemy's Turn");
+        TurnText.text = "Enemy's Turn";
         EnemyMovement[] moveScripts = GameObject.FindObjectsOfType<EnemyMovement>();
         foreach (EnemyMovement enemyScript in moveScripts)
         {
@@ -263,6 +266,7 @@ public class GameManager : MonoBehaviour
 
     private void WorldTurn()
     {
+        TurnText.text = "World's Turn";
         //Debug.Log("World's Turn");
         //worldHazards = GameObject.FindGameObjectsWithTag(hazardTag);
         /*foreach (GameObject obj in worldHazards)
