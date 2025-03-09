@@ -9,6 +9,12 @@ using UnityEngine;
 
 public class Pathfinder
 {
+    /// <summary>
+    /// Handles finding the path for the enemy.
+    /// </summary>
+    /// <param name="start">The tile the enemy is on</param>
+    /// <param name="target">The tile the player is on</param>
+    /// <returns></returns>
     public static List<TileBehaviour> FindPath(TileBehaviour start, TileBehaviour target)
     {
         List<TileBehaviour> openSet = new List<TileBehaviour> { start };
@@ -54,6 +60,12 @@ public class Pathfinder
         return null;
     }
 
+    /// <summary>
+    /// Gets the Heuristic value for a tile
+    /// </summary>
+    /// <param name="a">The first tile</param>
+    /// <param name="b">The second tile</param>
+    /// <returns>The tile with the best score</returns>
     private static float GetHeuristic(TileBehaviour a, TileBehaviour b)
     {
         return Mathf.Abs(a.gridLocation.x - b.gridLocation.x) + Mathf.Abs(a.gridLocation.y - b.gridLocation.y);
@@ -72,6 +84,12 @@ public class Pathfinder
         return best;
     }
 
+    /// <summary>
+    /// Reconstructs the path that the enemy will take and reverses it so the enemy can follow it
+    /// </summary>
+    /// <param name="cameFrom"></param>
+    /// <param name="current"></param>
+    /// <returns>The path the enemy is to follow</returns>
     private static List<TileBehaviour> ReconstructPath(Dictionary<TileBehaviour, TileBehaviour> cameFrom, TileBehaviour current)
     {
         List<TileBehaviour> path = new List<TileBehaviour> { current };
