@@ -57,6 +57,7 @@ public class PlayerBehaviour : GridMovement
                 enemy.TakeDamage();
             }
         }
+        tilesToAttack.Clear();
         gm.playerTile = GetTile();
         GetComponent<Renderer>().material.color = Color.green;
         gm.EndTurn();
