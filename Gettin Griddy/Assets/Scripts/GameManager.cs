@@ -18,6 +18,7 @@ public class GameManager : MonoBehaviour
     [SerializeField] private GameObject gridSpace;
     [SerializeField] private Text TurnText;
     public int playerMoveLimit = 3;
+    public int enemySpawnCushion = 2;
     [SerializeField] private Vector2 playerSpawnLocation;
     [SerializeField] private Vector2[] boulderSpawnLocations;
     [SerializeField] private Vector2[] enemySpawnLocations;
@@ -100,13 +101,22 @@ public class GameManager : MonoBehaviour
     private void SpawnRandom(GameObject obj) {
         int x = Random.Range(0, columns);
         int y = Random.Range(0, rows);
-        while (grid[x,y].objectOnTile != null) {
+        while (grid[x,y].objectOnTile != null || !AwayFromPlayer(grid[x, y])) {
             x = Random.Range(0, columns);
             y = Random.Range(0, rows);
         }
         Vector3 spawnPos = grid[x, y].transform.position;
         spawnPos += new Vector3(.5f, 1.5f, .5f);
         grid[x, y].objectOnTile = Instantiate(obj, spawnPos, Quaternion.identity);
+    }
+    private bool AwayFromPlayer(TileBehaviour tile) {
+        int tilesAwayX = Mathf.Abs((int)tile.gridLocation.x - (int)playerTile.gridLocation.x);
+        int tilesAwayY = Mathf.Abs((int)tile.gridLocation.y - (int)playerTile.gridLocation.y);
+        if ((tilesAwayX + tilesAwayY) > enemySpawnCushion)
+        {
+            return true;
+        }
+        return false;
     }
     private void Spawn(GameObject obj, Vector2 location)
     {
