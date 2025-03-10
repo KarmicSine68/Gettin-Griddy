@@ -46,6 +46,8 @@ public class GameManager : MonoBehaviour
     private bool isBattleActive = true; // Battle control flag
 
     [SerializeField] private int TurnState = 1;
+    
+    [SerializeField] private HazardManager hazardManager;
     /// <summary>
     /// Creates the grid and spwans things in
     /// </summary>
@@ -72,6 +74,8 @@ public class GameManager : MonoBehaviour
         for (int i = 0; i < enemySpawnLocations.Length; i++) {
             Spawn(enemy, enemySpawnLocations[i]);
         }
+        hazardManager.SpawnDouble();
+
         
     }
     private void FixedUpdate()
@@ -277,16 +281,16 @@ public class GameManager : MonoBehaviour
     private void WorldTurn()
     {
         TurnText.text = "World's Turn";
-        //Debug.Log("World's Turn");
-        //worldHazards = GameObject.FindGameObjectsWithTag(hazardTag);
-        /*foreach (GameObject obj in worldHazards)
+        Debug.Log("World's Turn");
+        worldHazards = GameObject.FindGameObjectsWithTag(hazardTag);
+        foreach (GameObject obj in worldHazards)
         {
             Hazard hazardScript = obj.GetComponent<Hazard>();
             if (hazardScript != null)
             {
                 hazardScript.TickDownTimer();
             }
-        }*/
+        }
         EndTurn();
         PlayerBehaviour player = playerTile.objectOnTile.GetComponent<PlayerBehaviour>();
         player.TurnOrginTile = playerTile.gridLocation;

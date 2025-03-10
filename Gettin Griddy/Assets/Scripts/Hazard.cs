@@ -27,7 +27,7 @@ public class Hazard : MonoBehaviour
         Debug.Log(gameObject.name + " triggered its effect!");
         hitBox.enabled = true;
         // Example: Destroy itself or deal damage
-        Destroy(gameObject);
+        Destroy(this.gameObject);
     }
 
     void OnTriggerEnter(Collider other)
