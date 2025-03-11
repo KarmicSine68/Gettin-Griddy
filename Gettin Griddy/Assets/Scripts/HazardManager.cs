@@ -24,34 +24,28 @@ public class HazardManager : MonoBehaviour
     {
         int randOne = Random.Range(0, 8);
         int randTwo = Random.Range(0, 8);
-        if(randOne == randTwo)
+        
+        while (randOne == randTwo) 
         {
-            if(randTwo == 0)
-            {
-                randTwo = randTwo + 1;
-            }
-            if(randTwo == 8)
-            {
-                randTwo = randTwo - 1;
-            }
+            randTwo = Random.Range(0, 8);
         }
-
-
-        int randChoice = Random.Range(0, 1);
+        
+        int randChoice = Random.Range(0, 2);
+        Debug.Log(randChoice);
         if(randChoice == 0)//spawns on rows
         {
             for (int i = 0; i < 9; i++)
             {
                 Vector3 spawnPos = gameManager.grid[randOne, i].transform.position;
                 spawnPos += new Vector3(.5f, 1.5f, .5f);
-                gameManager.grid[randOne, i].objectOnTile = Instantiate(hazard, spawnPos, Quaternion.identity);
+                Instantiate(hazard, spawnPos, Quaternion.identity);
                 Debug.Log("hitting row:" + randOne);
             }
             for (int i = 0; i < 9; i++)
             {
                 Vector3 spawnPos = gameManager.grid[randTwo, i].transform.position;
                 spawnPos += new Vector3(.5f, 1.5f, .5f);
-                gameManager.grid[randTwo, i].objectOnTile = Instantiate(hazard, spawnPos, Quaternion.identity);
+                Instantiate(hazard, spawnPos, Quaternion.identity);
                 Debug.Log("hitting row:" + randTwo);
             }
         }
@@ -61,14 +55,14 @@ public class HazardManager : MonoBehaviour
             {
                 Vector3 spawnPos = gameManager.grid[i, randOne].transform.position;
                 spawnPos += new Vector3(.5f, 1.5f, .5f);
-                gameManager.grid[i, randOne].objectOnTile = Instantiate(hazard, spawnPos, Quaternion.identity);
+                Instantiate(hazard, spawnPos, Quaternion.identity);
                 Debug.Log("hitting column:" + randOne);
             }
             for (int i = 0; i < 9; i++)
             {
                 Vector3 spawnPos = gameManager.grid[i, randTwo].transform.position;
                 spawnPos += new Vector3(.5f, 1.5f, .5f);
-                gameManager.grid[i, randTwo].objectOnTile = Instantiate(hazard, spawnPos, Quaternion.identity);
+                Instantiate(hazard, spawnPos, Quaternion.identity);
                 Debug.Log("hitting column:" + randTwo);
             }
         }
