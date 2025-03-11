@@ -26,7 +26,7 @@ RenderSettings:
   m_AmbientIntensity: 1
   m_AmbientMode: 0
   m_SubtractiveShadowColor: {r: 0.42, g: 0.478, b: 0.627, a: 1}
-  m_SkyboxMaterial: {fileID: 10304, guid: 0000000000000000f000000000000000, type: 0}
+  m_SkyboxMaterial: {fileID: 2100000, guid: e1ec0e2320d2d4fb9a393769378ce0a1, type: 2}
   m_HaloStrength: 0.5
   m_FlareStrength: 1
   m_FlareFadeSpeed: 3
@@ -707,9 +707,7 @@ MonoBehaviour:
   enemy: {fileID: 8998121906072561065, guid: 5fd55a35abbaa3f46964715dc1db1eaf, type: 3}
   boulder: {fileID: 5252985174513615257, guid: 3141f814348a101489cfd3c74a992208, type: 3}
   gridSpace: {fileID: 1894923049652469044, guid: 3f3292cccda260349825f898e3e5ecb0, type: 3}
-  TurnText: {fileID: 1353196792}
   playerMoveLimit: 3
-  enemySpawnCushion: 2
   playerSpawnLocation: {x: 4, y: 4}
   boulderSpawnLocations:
   - {x: 1, y: 2}
@@ -742,7 +740,6 @@ MonoBehaviour:
   rows: 9
   columns: 9
   TurnState: 1
-  hazardManager: {fileID: 1121946168}
 --- !u!4 &1121946167
 Transform:
   m_ObjectHideFlags: 0
