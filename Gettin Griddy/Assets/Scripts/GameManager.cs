@@ -8,6 +8,7 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.UI;
 
 public class GameManager : MonoBehaviour
 {
@@ -15,7 +16,9 @@ public class GameManager : MonoBehaviour
     [SerializeField] private GameObject enemy;
     [SerializeField] private GameObject boulder;
     [SerializeField] private GameObject gridSpace;
+    [SerializeField] private Text TurnText;
     public int playerMoveLimit = 3;
+    public int enemySpawnCushion = 2;
     [SerializeField] private Vector2 playerSpawnLocation;
     [SerializeField] private Vector2[] boulderSpawnLocations;
     [SerializeField] private Vector2[] enemySpawnLocations;
@@ -43,6 +46,8 @@ public class GameManager : MonoBehaviour
     private bool isBattleActive = true; // Battle control flag
 
     [SerializeField] private int TurnState = 1;
+    
+    [SerializeField] private HazardManager hazardManager;
     /// <summary>
     /// Creates the grid and spwans things in
     /// </summary>
@@ -69,6 +74,8 @@ public class GameManager : MonoBehaviour
         for (int i = 0; i < enemySpawnLocations.Length; i++) {
             Spawn(enemy, enemySpawnLocations[i]);
         }
+        hazardManager.SpawnDouble();
+
         
     }
     private void FixedUpdate()
@@ -98,13 +105,22 @@ public class GameManager : MonoBehaviour
     private void SpawnRandom(GameObject obj) {
         int x = Random.Range(0, columns);
         int y = Random.Range(0, rows);
-        while (grid[x,y].objectOnTile != null) {
+        while (grid[x,y].objectOnTile != null || !AwayFromPlayer(grid[x, y])) {
             x = Random.Range(0, columns);
             y = Random.Range(0, rows);
         }
         Vector3 spawnPos = grid[x, y].transform.position;
         spawnPos += new Vector3(.5f, 1.5f, .5f);
         grid[x, y].objectOnTile = Instantiate(obj, spawnPos, Quaternion.identity);
+    }
+    private bool AwayFromPlayer(TileBehaviour tile) {
+        int tilesAwayX = Mathf.Abs((int)tile.gridLocation.x - (int)playerTile.gridLocation.x);
+        int tilesAwayY = Mathf.Abs((int)tile.gridLocation.y - (int)playerTile.gridLocation.y);
+        if ((tilesAwayX + tilesAwayY) > enemySpawnCushion)
+        {
+            return true;
+        }
+        return false;
     }
     private void Spawn(GameObject obj, Vector2 location)
     {
@@ -224,6 +240,7 @@ public class GameManager : MonoBehaviour
     }
     private void PlayerTurn()
     {
+        TurnText.text = "Player's Turn";
         TurnState = 1;
     }
     public void HighlightMoveRange() {
@@ -237,7 +254,7 @@ public class GameManager : MonoBehaviour
     }
     private void EnemyTurn()
     {
-        //Debug.Log("Enemy's Turn");
+        TurnText.text = "Enemy's Turn";
         EnemyMovement[] moveScripts = GameObject.FindObjectsOfType<EnemyMovement>();
         foreach (EnemyMovement enemyScript in moveScripts)
         {
@@ -263,16 +280,17 @@ public class GameManager : MonoBehaviour
 
     private void WorldTurn()
     {
-        //Debug.Log("World's Turn");
-        //worldHazards = GameObject.FindGameObjectsWithTag(hazardTag);
-        /*foreach (GameObject obj in worldHazards)
+        TurnText.text = "World's Turn";
+        Debug.Log("World's Turn");
+        worldHazards = GameObject.FindGameObjectsWithTag(hazardTag);
+        foreach (GameObject obj in worldHazards)
         {
             Hazard hazardScript = obj.GetComponent<Hazard>();
             if (hazardScript != null)
             {
                 hazardScript.TickDownTimer();
             }
-        }*/
+        }
         EndTurn();
         PlayerBehaviour player = playerTile.objectOnTile.GetComponent<PlayerBehaviour>();
         player.TurnOrginTile = playerTile.gridLocation;

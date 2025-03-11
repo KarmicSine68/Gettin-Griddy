@@ -1,0 +1,12 @@
+# Blender 4.3.2 MTL File: 'Boulder.blend'
+# www.blender.org
+
+newmtl BOULDER
+Ns 119.338829
+Ka 0.629091 0.629091 0.629091
+Kd 0.027321 0.027321 0.027321
+Ks 0.500000 0.500000 0.500000
+Ke 0.000000 0.000000 0.000000
+Ni 3.200000
+d 1.000000
+illum 3

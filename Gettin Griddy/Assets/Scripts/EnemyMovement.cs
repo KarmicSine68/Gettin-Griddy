@@ -1,3 +1,9 @@
+/******************************************************************************
+ * Author: ?????, Skylar Turner
+ * File Name: EnemyMovement.cs
+ * Creation Date: 2/??/2025
+ * Brief: Handles enemy movement.
+ * ***************************************************************************/
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
@@ -13,51 +19,61 @@ public class EnemyMovement : GridMovement
         gm.EnemyTiles.Add(GetTile());
         GetTile().objectOnTile = gameObject;
     }
-    public void DoEnemyMovement() {
-        //print(GetTile());
-        int distanceX = (int)gm.playerTile.gridLocation.x - (int)GetTile().gridLocation.x;
-        int distanceY = (int)gm.playerTile.gridLocation.y - (int)GetTile().gridLocation.y;
-
-        bool canMoveX = true;
-        bool canMoveY = true;
-
-        if (distanceX == 0 || GetTile().GetNeighbor(new Vector3(Mathf.Sign(distanceX), 0, 0)).objectOnTile != null) {
-            canMoveX = false;
-        }
-        if (distanceY == 0 || GetTile().GetNeighbor(new Vector3(0, 0, Mathf.Sign(distanceY))).objectOnTile != null)
+    public void DoEnemyMovement()
+    {
+        // Try to find a path to the player
+        List<TileBehaviour> path = Pathfinder.FindPath(GetTile(), gm.playerTile);
+        if (path == null || path.Count < 2)
         {
-            canMoveY = false;
+            // If no path is found, move to the closest valid tile
+            MoveToClosestPoint();
+            return;
         }
 
-        //print("distance to player: " + distanceX + ", " + distanceY + "---" + canMoveX + canMoveY);
-        //choosing a direction to move in if it even can
-        if (canMoveX && canMoveY)
+        // If a path is found, proceed with normal movement
+        TileBehaviour nextTile = path[1]; // The next step in the path
+        MoveEnemy(nextTile.gridLocation - GetTile().gridLocation);
+    }
+
+    private void MoveEnemy(Vector2 direction)
+    {
+        gm.RemoveEnemy(gameObject);
+        GetTile().objectOnTile = null;
+
+        Vector3 dir = new Vector3(direction.x, 0, direction.y);
+        transform.rotation = Quaternion.LookRotation(dir);
+        Move(dir);
+
+        GetTile().objectOnTile = gameObject;
+        gm.TrackEnemy(GetTile());
+    }
+
+    private void MoveToClosestPoint()
+    {
+        // Get all walkable neighbors of the enemy's current position
+        List<TileBehaviour> neighbors = GetTile().GetNeighbors();
+
+        TileBehaviour closestTile = null;
+        float currentDistance = Vector2.Distance(GetTile().gridLocation, gm.playerTile.gridLocation);
+        float minDistance = currentDistance;
+
+        // Iterate through all neighbors to find the closest walkable one
+        foreach (TileBehaviour neighbor in neighbors)
         {
-            int r = Random.Range(0, 2);
-            if (r < 1)
+            if (!neighbor.IsWalkable()) continue; // Skip non-walkable tiles
+
+            float distance = Vector2.Distance(neighbor.gridLocation, gm.playerTile.gridLocation);
+            if (distance < minDistance)
             {
-                gm.RemoveEnemy(gameObject);
-                Move(new Vector3(Mathf.Sign(distanceX), 0, 0));
-                gm.TrackEnemy(GetTile());
-            }
-            else
-            {
-                gm.RemoveEnemy(gameObject);
-                Move(new Vector3(0, 0, Mathf.Sign(distanceY)));
-                gm.TrackEnemy(GetTile());
+                minDistance = distance;
+                closestTile = neighbor;
             }
         }
-        else if (canMoveX)
+
+        // If a valid closest tile is found, move to it
+        if (closestTile != null)
         {
-            gm.RemoveEnemy(gameObject);
-            Move(new Vector3(Mathf.Sign(distanceX), 0, 0));
-            gm.TrackEnemy(GetTile());
-        }
-        else if (canMoveY)
-        {
-            gm.RemoveEnemy(gameObject);
-            Move(new Vector3(0, 0, Mathf.Sign(distanceY)));
-            gm.TrackEnemy(GetTile());
+            MoveEnemy(closestTile.gridLocation - GetTile().gridLocation);
         }
     }
     public bool HasUnusedMoves() {
