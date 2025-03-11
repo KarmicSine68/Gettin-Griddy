@@ -50,7 +50,7 @@ MonoBehaviour:
     - {fileID: 8300000, guid: bc000f1ad4e189943b8556a16b556713, type: 3}
     - {fileID: 8300000, guid: 5bc2aa940f19c004ca4077bbdbf94133, type: 3}
     clip: {fileID: 0}
-    mixer: {fileID: 0}
+    mixer: {fileID: -7251810310856169561, guid: 4ad0db7fcfc5560478091196fdc0743c, type: 2}
     maxVolume: 1
     pitch: 1
     willLoop: 0
