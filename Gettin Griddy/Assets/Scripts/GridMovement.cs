@@ -16,7 +16,7 @@ public class GridMovement : MonoBehaviour
     {
         if(HasTile(dir) && TileIsEmpty(dir))
         {
-            SoundManager.Instance.PlaySFX("MoveSound");
+            //SoundManager.Instance.PlaySFX("MoveSound");
             Vector3 newPos = transform.position;
             newPos.x += dir.x;
             newPos.z += dir.z;
