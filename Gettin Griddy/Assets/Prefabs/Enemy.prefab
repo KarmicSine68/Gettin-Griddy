@@ -243,7 +243,8 @@ PrefabInstance:
       value: Goblin
       objectReference: {fileID: 0}
     m_RemovedComponents: []
-    m_RemovedGameObjects: []
+    m_RemovedGameObjects:
+    - {fileID: -8700617353114198275, guid: 39b75255ac0bc2d4795f06c12a9e30ca, type: 3}
     m_AddedGameObjects: []
     m_AddedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 39b75255ac0bc2d4795f06c12a9e30ca, type: 3}
