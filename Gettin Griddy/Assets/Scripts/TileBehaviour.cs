@@ -56,7 +56,9 @@ public class TileBehaviour : MonoBehaviour
         return null;
     }
     public void SetColor(Color c) {
-        GetComponent<Renderer>().material.color = c;
+        Transform child = transform.GetChild(0); 
+        Renderer rend = child.GetComponent<Renderer>();
+        rend.materials[1].color = c;
     }
     public bool HasNeighbor(Vector3 dir)
     {
@@ -68,7 +70,7 @@ public class TileBehaviour : MonoBehaviour
     private IEnumerator Flash(Color c)
     {
         Renderer renderer = GetComponent<Renderer>();
-        Material material = renderer.material;
+        Material material = renderer.materials[0];
         Color startColor = material.color;
         float duration = 0.25f;
         float elapsedTime = 0f;
