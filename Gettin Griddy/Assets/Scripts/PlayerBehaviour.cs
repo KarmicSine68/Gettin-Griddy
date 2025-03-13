@@ -79,6 +79,8 @@ public class PlayerBehaviour : GridMovement
     {
         if (attacking) {
             Vector2 attackDir = playerMove.ReadValue<Vector2>();
+            Vector3 dir = new Vector3(attackDir.x, 0, attackDir.y);
+            transform.rotation = Quaternion.LookRotation(dir);
             if (tilesToAttack.Count <= 0)
             {
                 tilesToAttack = gm.FindAttackTiles(attackDir);
@@ -132,6 +134,8 @@ public class PlayerBehaviour : GridMovement
     {
         if (!attacking && gm.playerTurn) {
             Vector2 moveDir = playerMove.ReadValue<Vector2>();
+            Vector3 dir = new Vector3(moveDir.x, 0, moveDir.y);
+            transform.rotation = Quaternion.LookRotation(dir);
             if (moveDir.x > 0)
             {
                 if (withinTurnsMoveLimit(moveDir)) {
