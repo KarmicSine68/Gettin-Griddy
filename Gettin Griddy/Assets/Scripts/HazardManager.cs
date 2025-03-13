@@ -4,19 +4,23 @@ using UnityEngine;
 
 public class HazardManager : MonoBehaviour
 {
+    public int hazardClock = 3;
     [SerializeField] private GameObject hazard;
     [SerializeField] private int col, row;
     [SerializeField] private GameManager gameManager;
     // Start is called before the first frame update
     void Start()
     {
-        
+        SpawnDouble();
     }
 
     // Update is called once per frame
     void Update()
     {
-        
+        if (hazardClock <= 0) {
+            SpawnDouble();
+            hazardClock = 3;
+        }
     }
 
 

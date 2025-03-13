@@ -4,21 +4,20 @@ using UnityEngine;
 
 public class Hazard : MonoBehaviour
 {
-    public int hazardClock = 3; // Adjust this in the Inspector
+    // Adjust this in the Inspector
     [SerializeField] private Collider hitBox;
     [SerializeField] private int damage = 1;
-
-    public void TickDownTimer()
+    HazardManager hm;
+    private void Start()
     {
-        if (hazardClock > 0)
+        hm = GameObject.FindObjectOfType<HazardManager>();
+    }
+    public void CheckHazardTimer()
+    {
+        //Debug.Log(gameObject.name + " Timer: " + hm.hazardClock);
+        if (hm.hazardClock <= 0)
         {
-            hazardClock--;
-            Debug.Log(gameObject.name + " Timer: " + hazardClock);
-
-            if (hazardClock <= 0)
-            {
-                TriggerHazardEffect();
-            }
+            TriggerHazardEffect();
         }
     }
 
@@ -28,6 +27,7 @@ public class Hazard : MonoBehaviour
         hitBox.enabled = true;
         // Example: Destroy itself or deal damage
         Destroy(this.gameObject);
+        
     }
 
     void OnTriggerEnter(Collider other)

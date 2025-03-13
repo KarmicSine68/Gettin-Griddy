@@ -724,15 +724,6 @@ MonoBehaviour:
   - {x: 6, y: 4}
   enemySpawnLocations:
   - {x: -1, y: -1}
-  - {x: -1, y: -1}
-  - {x: -1, y: -1}
-  - {x: -1, y: -1}
-  - {x: -1, y: -1}
-  - {x: -1, y: -1}
-  - {x: -1, y: -1}
-  - {x: -1, y: -1}
-  - {x: -1, y: -1}
-  - {x: -1, y: -1}
   playerTile: {fileID: 0}
   EnemyTiles: []
   worldHazards: []
@@ -770,6 +761,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 41d4655e0e1291e46a7595ae794a7508, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  hazardClock: 3
   hazard: {fileID: 652561402479608875, guid: 630b3f81c4dbcced181b166b42853fa6, type: 3}
   col: 0
   row: 0
