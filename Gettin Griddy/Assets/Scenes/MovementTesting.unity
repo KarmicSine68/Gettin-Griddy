@@ -724,6 +724,20 @@ MonoBehaviour:
   - {x: 6, y: 4}
   enemySpawnLocations:
   - {x: -1, y: -1}
+  - {x: -1, y: -1}
+  - {x: -1, y: -1}
+  - {x: -1, y: -1}
+  - {x: -1, y: -1}
+  - {x: -1, y: -1}
+  - {x: -1, y: -1}
+  - {x: -1, y: -1}
+  - {x: -1, y: -1}
+  - {x: -1, y: -1}
+  - {x: -1, y: -1}
+  - {x: -1, y: -1}
+  - {x: -1, y: -1}
+  - {x: -1, y: -1}
+  - {x: -1, y: -1}
   playerTile: {fileID: 0}
   EnemyTiles: []
   worldHazards: []
