@@ -13,9 +13,11 @@ public class TileBehaviour : MonoBehaviour
     public Vector2 gridLocation;
     public GameObject objectOnTile;
     private GameManager gm;
+    private Color origonalColor;
     private void Awake()
     {
         gm = FindObjectOfType<GameManager>();
+        origonalColor = transform.GetChild(0).GetComponent<Renderer>().materials[1].color;
     }
     /*private void OnCollisionEnter(Collision collision)
     {
@@ -56,7 +58,15 @@ public class TileBehaviour : MonoBehaviour
         return null;
     }
     public void SetColor(Color c) {
-        GetComponent<Renderer>().material.color = c;
+        Transform child = transform.GetChild(0); 
+        Renderer rend = child.GetComponent<Renderer>();
+        if (c == Color.white)
+        {
+            rend.materials[1].color = origonalColor;
+        }
+        else {
+            rend.materials[1].color = c;
+        }
     }
     public bool HasNeighbor(Vector3 dir)
     {
@@ -67,9 +77,7 @@ public class TileBehaviour : MonoBehaviour
     }
     private IEnumerator Flash(Color c)
     {
-        Renderer renderer = GetComponent<Renderer>();
-        Material material = renderer.material;
-        Color startColor = material.color;
+        Material material = transform.GetChild(0).GetComponent<Renderer>().materials[1];
         float duration = 0.25f;
         float elapsedTime = 0f;
         material.color = c;
@@ -77,11 +85,11 @@ public class TileBehaviour : MonoBehaviour
         elapsedTime = 0f;
         while (elapsedTime < duration)
         {
-            material.color = Color.Lerp(c, Color.white, elapsedTime / duration);
+            material.color = Color.Lerp(c, origonalColor, elapsedTime / duration);
             elapsedTime += Time.deltaTime;
             yield return null;
         }
-        material.color = Color.white;
+        material.color = origonalColor;
     }
 
     public bool IsWalkable()
