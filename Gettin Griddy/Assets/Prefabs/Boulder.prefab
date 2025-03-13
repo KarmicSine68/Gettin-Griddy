@@ -185,7 +185,7 @@ PrefabInstance:
     - target: {fileID: -7635826562936255635, guid: 1a31797b11b71964b9037ac9f73a9c0d, type: 3}
       propertyPath: m_Materials.Array.data[0]
       value: 
-      objectReference: {fileID: 8334790829335322836, guid: e51eb79ecca495d4fae89b47816c7b85, type: 3}
+      objectReference: {fileID: -1637880222114644024, guid: d1952afca8ee20c429f8caed1e15a82c, type: 3}
     - target: {fileID: 919132149155446097, guid: 1a31797b11b71964b9037ac9f73a9c0d, type: 3}
       propertyPath: m_Name
       value: Boulder
