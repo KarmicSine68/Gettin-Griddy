@@ -40,7 +40,9 @@ public class EnemyMovement : GridMovement
         gm.RemoveEnemy(gameObject);
         GetTile().objectOnTile = null;
 
-        Move(new Vector3(direction.x, 0, direction.y));
+        Vector3 dir = new Vector3(direction.x, 0, direction.y);
+        transform.rotation = Quaternion.LookRotation(dir);
+        Move(dir);
 
         GetTile().objectOnTile = gameObject;
         gm.TrackEnemy(GetTile());

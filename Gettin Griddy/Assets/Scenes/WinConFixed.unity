@@ -670,7 +670,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   score: 0
-  targetScore: 15
+  targetScore: 18
   winScene: WinScene
   scoreText: {fileID: 155811677}
 --- !u!1 &1121946165
@@ -683,7 +683,6 @@ GameObject:
   m_Component:
   - component: {fileID: 1121946167}
   - component: {fileID: 1121946166}
-  - component: {fileID: 1121946168}
   m_Layer: 0
   m_Name: GameManager
   m_TagString: Untagged
@@ -738,6 +737,9 @@ MonoBehaviour:
   - {x: -1, y: -1}
   - {x: -1, y: -1}
   - {x: -1, y: -1}
+  - {x: -1, y: -1}
+  - {x: -1, y: -1}
+  - {x: -1, y: -1}
   playerTile: {fileID: 0}
   EnemyTiles: []
   worldHazards: []
@@ -747,7 +749,6 @@ MonoBehaviour:
   rows: 9
   columns: 9
   TurnState: 1
-  hazardManager: {fileID: 1121946168}
 --- !u!4 &1121946167
 Transform:
   m_ObjectHideFlags: 0
@@ -763,23 +764,6 @@ Transform:
   m_Children: []
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!114 &1121946168
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1121946165}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 41d4655e0e1291e46a7595ae794a7508, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  hazardClock: 3
-  hazard: {fileID: 652561402479608875, guid: 630b3f81c4dbcced181b166b42853fa6, type: 3}
-  col: 0
-  row: 0
-  gameManager: {fileID: 1121946166}
 --- !u!1 &1193180448
 GameObject:
   m_ObjectHideFlags: 0

@@ -74,9 +74,6 @@ public class GameManager : MonoBehaviour
         for (int i = 0; i < enemySpawnLocations.Length; i++) {
             Spawn(enemy, enemySpawnLocations[i]);
         }
-        hazardManager.SpawnDouble();
-
-        
     }
     private void FixedUpdate()
     {
@@ -283,14 +280,16 @@ public class GameManager : MonoBehaviour
         TurnText.text = "World's Turn";
         Debug.Log("World's Turn");
         worldHazards = GameObject.FindGameObjectsWithTag(hazardTag);
+        hazardManager.hazardClock--;
         foreach (GameObject obj in worldHazards)
         {
             Hazard hazardScript = obj.GetComponent<Hazard>();
             if (hazardScript != null)
             {
-                hazardScript.TickDownTimer();
+                hazardScript.CheckHazardTimer();
             }
         }
+        
         EndTurn();
         PlayerBehaviour player = playerTile.objectOnTile.GetComponent<PlayerBehaviour>();
         player.TurnOrginTile = playerTile.gridLocation;
