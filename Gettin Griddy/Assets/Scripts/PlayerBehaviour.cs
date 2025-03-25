@@ -22,6 +22,7 @@ public class PlayerBehaviour : GridMovement
     public bool attacking = false;
     public List<TileBehaviour> tilesToAttack;
     public Vector2 TurnOrginTile;
+    public GameObject redKnight;
 
     /// <summary>
     /// Enables the new input system
@@ -57,6 +58,7 @@ public class PlayerBehaviour : GridMovement
                 enemy.TakeDamage();
             }
         }
+        redKnight.SetActive(false);
         tilesToAttack.Clear();
         gm.playerTile = GetTile();
         GetComponent<Renderer>().material.color = Color.green;
@@ -114,7 +116,9 @@ public class PlayerBehaviour : GridMovement
         attacking = !attacking;
         if (attacking) {
             GetComponent<Renderer>().material.color = Color.red;
+            redKnight.SetActive(true);
         } else {
+            redKnight.SetActive(false);
             if (tilesToAttack.Count > 0)
             {
                 foreach (TileBehaviour tile in tilesToAttack)
