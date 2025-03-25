@@ -160,7 +160,7 @@ public class PlayerBehaviour : GridMovement
                 if (withinTurnsMoveLimit(moveDir))
                 {
                     Move(Vector3.forward);
-                    gm.playerTile = GetTile();
+                    gm.playerTile = GetTile();     
                 }
             }
             else if (moveDir.y < 0)

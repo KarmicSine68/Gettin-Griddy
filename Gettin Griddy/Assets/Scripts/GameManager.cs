@@ -237,6 +237,7 @@ public class GameManager : MonoBehaviour
     }
     private void PlayerTurn()
     {
+
         TurnText.text = "Player's Turn";
         TurnState = 1;
     }
