@@ -13,6 +13,8 @@ public class EnemyMovement : GridMovement
     private GameManager gm;
     public int numOfMoves = 2;
     private int movesUsed = 0;
+    TileBehaviour pt; //Variable for predicted movement tile
+
     private void Start()
     {
         gm = GameObject.FindObjectOfType<GameManager>();
@@ -76,6 +78,67 @@ public class EnemyMovement : GridMovement
             MoveEnemy(closestTile.gridLocation - GetTile().gridLocation);
         }
     }
+
+    public TileBehaviour GetPredictedMove()
+    {
+        PredictMovement();
+        return pt;
+    }
+
+    public void PredictMovement()
+    {
+        try
+        {
+            // Try to find a path to the player
+            List<TileBehaviour> path = Pathfinder.FindPath(GetTile(), gm.playerTile);
+            if (path == null || path.Count < 2)
+            {
+                // If no path is found, move to the closest valid tile
+                MoveToClosestPredictedPoint();
+                return;
+            }
+
+            // If a path is found, proceed with normal movement
+            TileBehaviour nextTile = path[1]; // The next step in the path
+            pt = nextTile;
+        }
+        catch
+        {
+
+        }
+    }
+
+    private void MoveToClosestPredictedPoint()
+    {
+        // Get all walkable neighbors of the enemy's current position
+        List<TileBehaviour> neighbors = GetTile().GetNeighbors();
+
+        TileBehaviour closestTile = null;
+        float currentDistance = Vector2.Distance(GetTile().gridLocation, gm.playerTile.gridLocation);
+        float minDistance = currentDistance;
+
+        // Iterate through all neighbors to find the closest walkable one
+        foreach (TileBehaviour neighbor in neighbors)
+        {
+            if (!neighbor.IsWalkable()) continue; // Skip non-walkable tiles
+
+            float distance = Vector2.Distance(neighbor.gridLocation, gm.playerTile.gridLocation);
+            if (distance < minDistance)
+            {
+                minDistance = distance;
+                closestTile = neighbor;
+            }
+        }
+
+        // If a valid closest tile is found, move to it
+        if (closestTile != null)
+        {
+            
+        }
+
+        pt = closestTile;
+    }
+
     public bool HasUnusedMoves() {
         if (movesUsed >= numOfMoves) {
             return false;
