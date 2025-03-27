@@ -47,8 +47,63 @@ MonoBehaviour:
   audioClips:
   - audioName: MoveSound
     clips:
-    - {fileID: 8300000, guid: bc000f1ad4e189943b8556a16b556713, type: 3}
-    - {fileID: 8300000, guid: 5bc2aa940f19c004ca4077bbdbf94133, type: 3}
+    - {fileID: 8300000, guid: 785ad465002788a41be653a2befc3638, type: 3}
+    clip: {fileID: 0}
+    mixer: {fileID: -7251810310856169561, guid: 4ad0db7fcfc5560478091196fdc0743c, type: 2}
+    maxVolume: 1
+    pitch: 1
+    willLoop: 0
+    source: {fileID: 0}
+  - audioName: PlayerHit
+    clips:
+    - {fileID: 8300000, guid: c8e9e8bddecf3f34f8568a88017bb49e, type: 3}
+    - {fileID: 8300000, guid: 4ab28ae4d0ef4b448a12b4c9abb023d4, type: 3}
+    clip: {fileID: 0}
+    mixer: {fileID: -7251810310856169561, guid: 4ad0db7fcfc5560478091196fdc0743c, type: 2}
+    maxVolume: 1
+    pitch: 1
+    willLoop: 0
+    source: {fileID: 0}
+  - audioName: EnemyHit
+    clips:
+    - {fileID: 8300000, guid: 5f621585655d54745bce85b9dd8e77a9, type: 3}
+    - {fileID: 8300000, guid: 20be75466b3eaba4dbe300f872f0d7c2, type: 3}
+    clip: {fileID: 0}
+    mixer: {fileID: -7251810310856169561, guid: 4ad0db7fcfc5560478091196fdc0743c, type: 2}
+    maxVolume: 1
+    pitch: 1
+    willLoop: 0
+    source: {fileID: 0}
+  - audioName: FireSound
+    clips:
+    - {fileID: 8300000, guid: 3a7b91400d7684340b0b6b1736894fee, type: 3}
+    clip: {fileID: 0}
+    mixer: {fileID: -7251810310856169561, guid: 4ad0db7fcfc5560478091196fdc0743c, type: 2}
+    maxVolume: 1
+    pitch: 1
+    willLoop: 0
+    source: {fileID: 0}
+  - audioName: WhooshSound
+    clips:
+    - {fileID: 8300000, guid: c3590f19619f38b48bbc2edbd7bf279c, type: 3}
+    clip: {fileID: 0}
+    mixer: {fileID: -7251810310856169561, guid: 4ad0db7fcfc5560478091196fdc0743c, type: 2}
+    maxVolume: 1
+    pitch: 1
+    willLoop: 0
+    source: {fileID: 0}
+  - audioName: EnterAttack
+    clips:
+    - {fileID: 8300000, guid: d3bed9bb4de6be64095875725da2caa7, type: 3}
+    clip: {fileID: 0}
+    mixer: {fileID: -7251810310856169561, guid: 4ad0db7fcfc5560478091196fdc0743c, type: 2}
+    maxVolume: 1
+    pitch: 1
+    willLoop: 0
+    source: {fileID: 0}
+  - audioName: LeaveAttack
+    clips:
+    - {fileID: 8300000, guid: 26b1afa693523194c8f1353609b76f59, type: 3}
     clip: {fileID: 0}
     mixer: {fileID: -7251810310856169561, guid: 4ad0db7fcfc5560478091196fdc0743c, type: 2}
     maxVolume: 1
