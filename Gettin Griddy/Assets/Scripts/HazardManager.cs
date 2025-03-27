@@ -4,7 +4,7 @@ using UnityEngine;
 
 public class HazardManager : MonoBehaviour
 {
-    public int hazardClock = 1;
+    public int hazardClock = 3;
     [SerializeField] private GameObject hazard;
     [SerializeField] private int col, row;
     [SerializeField] private GameManager gameManager;
@@ -19,7 +19,7 @@ public class HazardManager : MonoBehaviour
     {
         if (hazardClock <= 0) {
             SpawnDouble();
-            hazardClock = 1;
+            hazardClock = 3;
         }
     }
 
