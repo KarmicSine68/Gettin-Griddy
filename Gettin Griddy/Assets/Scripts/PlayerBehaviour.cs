@@ -49,6 +49,11 @@ public class PlayerBehaviour : GridMovement
         tilesToAttack = new List<TileBehaviour>();
     }
 
+    private void Start()
+    {
+        PredictEnemy();
+    }
+
     private void EndTurn(InputAction.CallbackContext obj)
     {
         foreach (TileBehaviour tile in tilesToAttack)
@@ -171,6 +176,25 @@ public class PlayerBehaviour : GridMovement
                     gm.playerTile = GetTile();
                 }
             } 
+        }
+
+        PredictEnemy();
+    }
+
+    /// <summary>
+    /// Displays the enemie's predicted attacks
+    /// </summary>
+    public void PredictEnemy()
+    {
+        EnemyAttack[] attackScripts = GameObject.FindObjectsOfType<EnemyAttack>();
+        foreach (EnemyAttack enemyScript in attackScripts)
+        {
+            Debug.Log(enemyScript.gameObject.GetComponent<EnemyMovement>().GetPredictedMove());
+
+            if (enemyScript.gameObject.GetComponent<EnemyMovement>().GetPredictedMove() != null)
+            {
+                enemyScript.PredictAttack(enemyScript.gameObject.GetComponent<EnemyMovement>().GetPredictedMove());
+            }
         }
     }
 

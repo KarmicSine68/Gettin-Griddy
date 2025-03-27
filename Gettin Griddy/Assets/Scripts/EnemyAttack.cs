@@ -35,6 +35,34 @@ public class EnemyAttack : MonoBehaviour
             lm.DecreaseLives();
         }
     }
+
+    public void PredictAttack(TileBehaviour currentTile)
+    {
+       
+        TileBehaviour playerTile = gm.playerTile;
+
+        if(currentTile == playerTile)
+        {
+            currentTile.FlashColor(Color.red);
+        }
+        if (currentTile.GetNeighbor(Vector3.forward) == playerTile)
+        {
+            currentTile.FlashColor(Color.red);
+        }
+        if (currentTile.GetNeighbor(Vector3.back) == playerTile)
+        {
+            currentTile.FlashColor(Color.red);
+        }
+        if (currentTile.GetNeighbor(Vector3.left) == playerTile)
+        {
+            currentTile.FlashColor(Color.red);
+        }
+        if (currentTile.GetNeighbor(Vector3.right) == playerTile)
+        {
+            currentTile.FlashColor(Color.red);
+        }
+    }
+
     public TileBehaviour GetTile() {
         float rayDistance = 2f;
         RaycastHit[] hits = Physics.RaycastAll(transform.position, Vector3.down, rayDistance);
