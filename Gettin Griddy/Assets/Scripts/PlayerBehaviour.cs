@@ -66,7 +66,8 @@ public class PlayerBehaviour : GridMovement
         tilesToAttack.Clear();
         gm.playerTile = GetTile();
         GetComponent<Renderer>().material.color = Color.green;
-        Invoke("DelayEndTurn", .5f);
+        gm.EndTurn();
+        //Invoke("DelayEndTurn", .5f);
     }
 
     private void DelayEndTurn()
@@ -179,10 +180,9 @@ public class PlayerBehaviour : GridMovement
                     Move(Vector3.back);
                     gm.playerTile = GetTile();
                 }
-            } 
+            }
+            PredictEnemy();
         }
-
-        PredictEnemy();
     }
 
     /// <summary>
