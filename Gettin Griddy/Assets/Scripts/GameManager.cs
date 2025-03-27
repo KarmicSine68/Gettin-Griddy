@@ -48,6 +48,7 @@ public class GameManager : MonoBehaviour
     [SerializeField] private int TurnState = 1;
     
     [SerializeField] private HazardManager hazardManager;
+    private bool worldTurnCompleted = false;
     /// <summary>
     /// Creates the grid and spwans things in
     /// </summary>
@@ -282,24 +283,34 @@ public class GameManager : MonoBehaviour
 
     private void WorldTurn()
     {
-        TurnText.text = "World's Turn";
-        Debug.Log("World's Turn");
-        worldHazards = GameObject.FindGameObjectsWithTag(hazardTag);
-        hazardManager.hazardClock--;
-        foreach (GameObject obj in worldHazards)
-        {
-            Hazard hazardScript = obj.GetComponent<Hazard>();
-            if (hazardScript != null)
+        if (!worldTurnCompleted) {
+            TurnText.text = "World's Turn";
+            Debug.Log("World's Turn");
+            worldHazards = GameObject.FindGameObjectsWithTag(hazardTag);
+            hazardManager.hazardClock--;
+            foreach (GameObject obj in worldHazards)
             {
-                hazardScript.CheckHazardTimer();
+                Hazard hazardScript = obj.GetComponent<Hazard>();
+                if (hazardScript != null)
+                {
+                    hazardScript.CheckHazardTimer();
+                }
             }
-        }
-        
+            PlayerBehaviour player = playerTile.objectOnTile.GetComponent<PlayerBehaviour>();
+            player.attacking = false;
+            worldTurnCompleted = true;
+            StartCoroutine(WaitForAnimation());
+            
+        }  
+    }
+    private IEnumerator WaitForAnimation() {
+        yield return new WaitForSeconds(2f);
         EndTurn();
         PlayerBehaviour player = playerTile.objectOnTile.GetComponent<PlayerBehaviour>();
         player.TurnOrginTile = playerTile.gridLocation;
-        player.attacking = false;
+        
         TurnState = 3;
+        worldTurnCompleted = false;
     }
 }
 
