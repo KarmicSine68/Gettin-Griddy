@@ -299,7 +299,18 @@ public class GameManager : MonoBehaviour
             PlayerBehaviour player = playerTile.objectOnTile.GetComponent<PlayerBehaviour>();
             player.attacking = false;
             worldTurnCompleted = true;
-            StartCoroutine(WaitForAnimation());
+            if (hazardManager.hazardClock == 0)
+            {
+                StartCoroutine(WaitForAnimation());
+            }
+            else
+            {
+                EndTurn();
+                player.TurnOrginTile = playerTile.gridLocation;
+
+                TurnState = 3;
+                worldTurnCompleted = false;
+            }
             
         }  
     }

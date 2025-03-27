@@ -12,6 +12,13 @@ public class Hazard : MonoBehaviour
     private void Start()
     {
         hm = GameObject.FindObjectOfType<HazardManager>();
+
+        RaycastHit hit;
+        //Physics.Raycast(transform.position, Vector3.down, out hit);
+        if(Physics.Raycast(transform.position, Vector3.down, out hit))
+        {
+            transform.parent = hit.transform;
+        }
     }
     public void CheckHazardTimer()
     {
@@ -19,6 +26,29 @@ public class Hazard : MonoBehaviour
         if (hm.hazardClock <= 0)
         {
             StartCoroutine(TriggerHazardEffect());
+        }
+        if(hm.hazardClock == 1)
+        {
+            StartCoroutine(Warning());
+        }
+    }
+
+    private IEnumerator Warning()
+    {
+        TileBehaviour tile = GetComponentInParent<TileBehaviour>();
+
+        while(true)
+        {
+            if(hm.hazardClock != 1)
+            {
+                break;
+            }
+            try
+            {
+                tile.FlashColor(Color.red);
+            }
+            catch { };
+            yield return new WaitForSeconds(.75f);
         }
     }
 
