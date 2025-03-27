@@ -124,8 +124,10 @@ public class PlayerBehaviour : GridMovement
     {
         attacking = !attacking;
         if (attacking) {
+            SoundManager.Instance.PlaySFX("EnterAttack");
             GetComponent<Renderer>().material.color = Color.red;
         } else {
+            SoundManager.Instance.PlaySFX("LeaveAttack");
             if (tilesToAttack.Count > 0)
             {
                 foreach (TileBehaviour tile in tilesToAttack)

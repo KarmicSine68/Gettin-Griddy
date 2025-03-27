@@ -18,6 +18,7 @@ public class LivesManager : MonoBehaviour
 
     public void DecreaseLives()
     {
+        SoundManager.Instance.PlaySFX("PlayerHit");
         lives--;
         LivesText.text = "Lives: " + lives;
         CheckLoss();
