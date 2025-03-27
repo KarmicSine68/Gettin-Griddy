@@ -153,6 +153,8 @@ public class GameManager : MonoBehaviour
             enemyTurn = false;
             playerTurn = true;
             worldTurn = false;
+
+            player.GetComponent<PlayerBehaviour>().PredictEnemy();
         }
     }
     /// <summary>
@@ -240,6 +242,8 @@ public class GameManager : MonoBehaviour
 
         TurnText.text = "Player's Turn";
         TurnState = 1;
+
+        //PredictEnemy();
     }
     public void HighlightMoveRange() {
         foreach (TileBehaviour tile in grid) {
