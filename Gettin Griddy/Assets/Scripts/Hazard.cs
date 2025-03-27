@@ -27,6 +27,7 @@ public class Hazard : MonoBehaviour
         Debug.Log(gameObject.name + " triggered its effect!");
         hitBox.enabled = true;
         animator.SetBool("Explodes", true);
+        SoundManager.Instance.PlaySFX("FireSound");
         yield return new WaitForSeconds(1.6f);
         Destroy(this.gameObject);
              

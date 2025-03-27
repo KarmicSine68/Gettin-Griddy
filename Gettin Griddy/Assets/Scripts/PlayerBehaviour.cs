@@ -60,11 +60,17 @@ public class PlayerBehaviour : GridMovement
             tile.SetColor(Color.white);
             if (tile.objectOnTile != null && tile.objectOnTile.TryGetComponent<EnemyTakeDamage>(out EnemyTakeDamage enemy)) {
                 enemy.TakeDamage();
+                SoundManager.Instance.PlaySFX("EnemyHit");
             }
         }
         tilesToAttack.Clear();
         gm.playerTile = GetTile();
         GetComponent<Renderer>().material.color = Color.green;
+        Invoke("DelayEndTurn", .5f);
+    }
+
+    private void DelayEndTurn()
+    {
         gm.EndTurn();
     }
 
