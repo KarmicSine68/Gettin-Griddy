@@ -435,8 +435,8 @@ MonoBehaviour:
     -
     If a player is hit by dragon''s breath, they will lose 1 health
 
-    - If an
-    enemy are hit by the dragon''s breath, they will die'
+    - Enemies
+    are not affected by dragon''s breath'
   m_isRightToLeft: 0
   m_fontAsset: {fileID: 11400000, guid: 8f586378b4e144a9851e7b34d9b748ee, type: 2}
   m_sharedMaterial: {fileID: 2180264, guid: 8f586378b4e144a9851e7b34d9b748ee, type: 2}
