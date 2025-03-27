@@ -8,6 +8,7 @@ public class Hazard : MonoBehaviour
     [SerializeField] private Collider hitBox;
     [SerializeField] private int damage = 1;
     HazardManager hm;
+    [SerializeField] private Animator animator;
     private void Start()
     {
         hm = GameObject.FindObjectOfType<HazardManager>();
@@ -17,17 +18,18 @@ public class Hazard : MonoBehaviour
         //Debug.Log(gameObject.name + " Timer: " + hm.hazardClock);
         if (hm.hazardClock <= 0)
         {
-            TriggerHazardEffect();
+            StartCoroutine(TriggerHazardEffect());
         }
     }
 
-    private void TriggerHazardEffect()
+    private IEnumerator TriggerHazardEffect()
     {
         Debug.Log(gameObject.name + " triggered its effect!");
         hitBox.enabled = true;
-        // Example: Destroy itself or deal damage
+        animator.SetBool("Explodes", true);
+        yield return new WaitForSeconds(1.6f);
         Destroy(this.gameObject);
-        
+             
     }
 
     void OnTriggerEnter(Collider other)
