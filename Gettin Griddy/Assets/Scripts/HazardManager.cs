@@ -43,6 +43,7 @@ public class HazardManager : MonoBehaviour
                 Vector3 spawnPos = gameManager.grid[randOne, i].transform.position;
                 spawnPos += new Vector3(.5f, 1.5f, .5f);
                 Instantiate(hazard, spawnPos, Quaternion.identity);
+                SoundManager.Instance.PlaySFX("WhooshSound");
                 Debug.Log("hitting row:" + randOne);
             }
             for (int i = 0; i < 9; i++)
@@ -50,6 +51,7 @@ public class HazardManager : MonoBehaviour
                 Vector3 spawnPos = gameManager.grid[randTwo, i].transform.position;
                 spawnPos += new Vector3(.5f, 1.5f, .5f);
                 Instantiate(hazard, spawnPos, Quaternion.identity);
+                SoundManager.Instance.PlaySFX("WhooshSound");
                 Debug.Log("hitting row:" + randTwo);
             }
         }
@@ -60,6 +62,7 @@ public class HazardManager : MonoBehaviour
                 Vector3 spawnPos = gameManager.grid[i, randOne].transform.position;
                 spawnPos += new Vector3(.5f, 1.5f, .5f);
                 Instantiate(hazard, spawnPos, Quaternion.identity);
+                SoundManager.Instance.PlaySFX("WhooshSound");
                 Debug.Log("hitting column:" + randOne);
             }
             for (int i = 0; i < 9; i++)
@@ -67,6 +70,7 @@ public class HazardManager : MonoBehaviour
                 Vector3 spawnPos = gameManager.grid[i, randTwo].transform.position;
                 spawnPos += new Vector3(.5f, 1.5f, .5f);
                 Instantiate(hazard, spawnPos, Quaternion.identity);
+                SoundManager.Instance.PlaySFX("WhooshSound");
                 Debug.Log("hitting column:" + randTwo);
             }
         }

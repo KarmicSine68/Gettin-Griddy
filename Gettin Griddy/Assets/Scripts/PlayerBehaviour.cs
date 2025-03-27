@@ -60,11 +60,17 @@ public class PlayerBehaviour : GridMovement
             tile.SetColor(Color.white);
             if (tile.objectOnTile != null && tile.objectOnTile.TryGetComponent<EnemyTakeDamage>(out EnemyTakeDamage enemy)) {
                 enemy.TakeDamage();
+                SoundManager.Instance.PlaySFX("EnemyHit");
             }
         }
         tilesToAttack.Clear();
         gm.playerTile = GetTile();
         GetComponent<Renderer>().material.color = Color.green;
+        Invoke("DelayEndTurn", .5f);
+    }
+
+    private void DelayEndTurn()
+    {
         gm.EndTurn();
     }
 
@@ -118,8 +124,10 @@ public class PlayerBehaviour : GridMovement
     {
         attacking = !attacking;
         if (attacking) {
+            SoundManager.Instance.PlaySFX("EnterAttack");
             GetComponent<Renderer>().material.color = Color.red;
         } else {
+            SoundManager.Instance.PlaySFX("LeaveAttack");
             if (tilesToAttack.Count > 0)
             {
                 foreach (TileBehaviour tile in tilesToAttack)

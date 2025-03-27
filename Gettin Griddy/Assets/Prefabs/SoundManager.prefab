@@ -79,8 +79,8 @@ MonoBehaviour:
     - {fileID: 8300000, guid: 3a7b91400d7684340b0b6b1736894fee, type: 3}
     clip: {fileID: 0}
     mixer: {fileID: -7251810310856169561, guid: 4ad0db7fcfc5560478091196fdc0743c, type: 2}
-    maxVolume: 1
-    pitch: 1
+    maxVolume: 0.8
+    pitch: 2
     willLoop: 0
     source: {fileID: 0}
   - audioName: WhooshSound
